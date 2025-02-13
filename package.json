@@ -46,5 +46,8 @@
         "typescript": "^5.7.3",
         "typescript-eslint": "^8.24.0",
         "vitest": "^2.1.4"
+    },
+    "dependencies": {
+        "env-schema": "^6.0.1"
     }
 }
