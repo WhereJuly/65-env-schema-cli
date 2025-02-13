@@ -15,9 +15,9 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
         expect(actual.run).toBeInstanceOf(Function);
         expect(actual.validate).toBeInstanceOf(Function);
 
-        expect(actual.schema).toHaveProperty('string');
-        expect(actual.schema).toHaveProperty('object');
-        expect(actual.schema).toHaveProperty('isObject');
+        expect(actual.schema).toHaveProperty('file');
+        expect(actual.schema).toHaveProperty('value');
+        expect(actual.schema).toHaveProperty('isFileOrURL');
     });
 
     describe('+constructor() #2: Should explore "schema" expected use cases', () => {
@@ -27,16 +27,16 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
 
             const actual = service.schema;
 
-            expect(actual.string).toEqual(data.string);
-            expect(actual.object).toEqual(data.object);
-            expect(actual.isObject).toEqual(data.is_object);
+            expect(actual.file).toEqual(data.file);
+            expect(actual.value).toEqual(data.value);
+            expect(actual.isFileOrURL).toEqual(data.is_ile_or_url);
         });
 
         function dataProvider_schema() {
-            const str = 'dummy'; const obj = {};
+            const file = 'dummy'; const value = {};
             return [
-                { name: 'String', schema: str, string: str, object: null, is_object: false },
-                { name: 'Object', schema: obj, string: null, object: obj, is_object: true },
+                { name: 'String', schema: file, file: file, value: null, is_ile_or_url: true },
+                { name: 'Object', schema: value, file: null, value: value, is_ile_or_url: false },
             ];
         }
     });
@@ -49,6 +49,10 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
         expect(actual).toThrow(EnvSchemaCLIException);
         expect(actual).toThrowError('"number" provided');
     });
+
+    it('+run(): Should successfully prepare for and run validator', () => {
+    });
+
 
 });
 

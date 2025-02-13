@@ -48,6 +48,7 @@
         "vitest": "^2.1.4"
     },
     "dependencies": {
-        "env-schema": "^6.0.1"
+        "env-schema": "^6.0.1",
+        "openapi-types": "^12.1.3"
     }
 }

@@ -1,20 +1,24 @@
 'use strict';
 
 import envSchema from 'env-schema';
+import path from 'path';
+import fs from 'fs';
 import { ValidationError } from 'ajv';
 
 import EnvSchemaCLIException from '@src/exceptions/EnvSchemaCLI.exception.js';
+import OASJSONDefinitionsRetrieveService from '@src/shared/OASJSONDefinitionsRetrieve.service.js';
 
 type TSchema = {
-    string: string | null;
-    object: Record<string, any> | null;
-    isObject: boolean;
+    file: string | null;
+    value: Record<string, any> | null;
+    isFileOrURL: boolean;
 };
 
 export default class EnvSchemaCoreService {
 
+    readonly #definitionsRetrieveService: OASJSONDefinitionsRetrieveService;
     readonly #schema: TSchema;
-    readonly #envFilePath: string | undefined;
+    readonly #envFileFullPath: string | null;
 
     // This should save the input arguments making them available for `.run()` method.
     // Analyzes `schema`, if `string` puts the value to private `_schema.string`, otherwise in `_schema.object`;
@@ -22,17 +26,20 @@ export default class EnvSchemaCoreService {
     // Exposes the `schema` getter`.
     // Stores envFilePath in private `_envFilePath`. 
     constructor(schema: string | Record<string, any>, envFilePath?: string) {
+
         this.#schema = {
-            string: this.isString(schema) ? schema as string : null,
-            object: this.isObject(schema) ? schema as Record<string, any> : null,
-            isObject: this.isObject(schema)
+            file: this.isString(schema) ? schema as string : null,
+            value: this.isObject(schema) ? schema as Record<string, any> : null,
+            isFileOrURL: this.isString(schema)
         };
 
         if (!this.isValidSchemaArgument()) {
             throw new EnvSchemaCLIException(`The "schema" argument must be either a string or an object, "${typeof schema}" provided.`);
         }
 
-        this.#envFilePath = envFilePath;
+        this.#envFileFullPath = this.constructFullFilePathOrThrow(envFilePath);
+
+        this.#definitionsRetrieveService = new OASJSONDefinitionsRetrieveService();
     }
 
     public get schema(): TSchema {
@@ -43,8 +50,13 @@ export default class EnvSchemaCoreService {
     // It then runs `.validate()` with these parameters.
     // It should check the env file exists (construct full name) and throw EnvSchemaException if not.
     // It should delegate to my schema loader module loading the schema and re-throw EnvSchemaException
-    public run(): void {
-        // WRITE:;
+    // WRITE:;
+    public async run(): Promise<void> {
+        if (this.#schema.isFileOrURL) {
+            // WRITE: TDD
+            this.#schema.value = await this.#definitionsRetrieveService.retrieve(this.#schema.file as string) as Record<string, any>;
+        }
+
     }
 
     /**
@@ -72,7 +84,20 @@ export default class EnvSchemaCoreService {
     }
 
     private isValidSchemaArgument(): boolean {
-        return !!this.schema.string || !!this.schema.object;
+        return !!this.schema.file || !!this.schema.value;
+    }
+
+    private constructFullFilePathOrThrow(envFilePath?: string): string | null {
+        if (!envFilePath) { return null; }
+
+        const fullPath = path.resolve(process.cwd(), envFilePath);
+
+        // WRITE: assert;
+        if (!fs.existsSync(path.dirname(fullPath))) {
+            throw new EnvSchemaCLIException(`The file at given 'envFilePath' "${fullPath}" does not exist.`);
+        }
+
+        return fullPath;
     }
 
 }
