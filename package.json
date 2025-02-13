@@ -22,8 +22,8 @@
     "author": "valentineshi.dev@gmail.com",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/WhereJuly/60-1-oas-markdown-merger.git"
+        "url": "git+https://github.com/WhereJuly/65-env-schema-cli.git"
     },
-    "homepage": "https://github.com/WhereJuly/60-1-oas-markdown-merger#readme",
-    "issues": "https://github.com/WhereJuly/60-1-oas-markdown-merger/issues"
+    "homepage": "https://github.com/WhereJuly/65-env-schema-cli#readme",
+    "issues": "https://github.com/WhereJuly/65-env-schema-cli/issues"
 }
