@@ -1,0 +1,37 @@
+{
+    "extends": "@tsconfig/node20/tsconfig.json",
+    "compilerOptions": {
+        "incremental": true /* Save .tsbuildinfo files to allow for incremental compilation of projects. */,
+        "tsBuildInfoFile": "./.delivery/.temp/.tsbuildinfo" /* Specify the path to .tsbuildinfo incremental compilation file. */,
+        "target": "es2022",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "baseUrl": ".",
+        "paths": {
+            "@src/*": ["./src/*"],
+            "@tests/*": ["./tests/*"],
+            "@fixtures/*": ["./tests/foundation/.ancillary/fixtures/*"]
+        },
+        "resolveJsonModule": true,
+        "declaration": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noUncheckedIndexedAccess": true /* Add 'undefined' to a type when accessed using an index. */,
+        "skipLibCheck": true
+    },
+
+    "include": [
+        "./src",
+        "eslint.config.mjs",
+        "./.usage/**/*.ts",
+        ".delivery/scripts",
+        "./tests/foundation/**/*.ts",
+        "./tests/foundation/integration/.external/**/*.ts",
+        "./tests/foundation/.ancillary/**/*.*"
+    ],
+    "exclude": ["node_modules"]
+}

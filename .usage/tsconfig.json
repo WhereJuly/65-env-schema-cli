@@ -1,0 +1,25 @@
+{
+    "extends": "@tsconfig/node20/tsconfig.json",
+    "compilerOptions": {
+        // "incremental": true /* Save .tsbuildinfo files to allow for incremental compilation of projects. */,
+        // "tsBuildInfoFile": ".temp/.tsbuildinfo" /* Specify the path to .tsbuildinfo incremental compilation file. */,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "baseUrl": ".",
+        "paths": {
+            "@tests/*": ["./tests/*"]
+        },
+        "resolveJsonModule": true,
+        "declaration": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noUncheckedIndexedAccess": true /* Add 'undefined' to a type when accessed using an index. */,
+        "skipLibCheck": true
+    },
+    "include": ["./tests", "./demo"],
+    "exclude": ["node_modules"]
+}

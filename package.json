@@ -5,7 +5,16 @@
     "type": "module",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test:foundation": "npm run check-types && vitest run --config tests/foundation/.ancillary/config/vitest.config.ts",
+        "check-types": "npx tsc --noEmit --project .",
+        "lint": "npx eslint ./src && npx eslint ./.usage",
+        "package:build": "tsx .delivery/scripts/build.ts",
+        "package:de-alias": "npx tsc-alias -p ./.delivery/configuration/tsconfig.json --verbose",
+        "package:bundle:copy": "cpy ./package.json ./LICENSE ./readme.md ./.delivery/.builds/dist",
+        "package:pack": "cd ./.delivery/.builds/dist && npm pack",
+        "package:test:usage": "cd .usage && npm install && npm run test:usage",
+        "package:lint:readme": "npx markdown-link-check --progress --quiet ./readme.md ./.docs",
+        "package:publish": "npm publish ./.delivery/.builds/dist"
     },
     "keywords": [
         "env",
@@ -25,5 +34,17 @@
         "url": "git+https://github.com/WhereJuly/65-env-schema-cli.git"
     },
     "homepage": "https://github.com/WhereJuly/65-env-schema-cli#readme",
-    "issues": "https://github.com/WhereJuly/65-env-schema-cli/issues"
+    "issues": "https://github.com/WhereJuly/65-env-schema-cli/issues",
+    "devDependencies": {
+        "@eslint/js": "^9.20.0",
+        "@tsconfig/node20": "^20.1.4",
+        "@types/node": "^22.13.2",
+        "@typescript-eslint/eslint-plugin": "^8.24.0",
+        "@typescript-eslint/parser": "^8.24.0",
+        "eslint": "^9.20.1",
+        "tsx": "^4.19.2",
+        "typescript": "^5.7.3",
+        "typescript-eslint": "^8.24.0",
+        "vitest": "^2.1.4"
+    }
 }
