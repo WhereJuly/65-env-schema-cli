@@ -1,5 +1,7 @@
 'use strict';
 
+import EnvSchemaCLIErrorVO from '@src/core/EnvSchemaCLIError.valueobject.js';
+
 /**
  * The application-specific exception.
  * 
@@ -8,7 +10,9 @@
  */
 export default class EnvSchemaCLIException extends Error {
 
-    constructor(message: string, originalError?: Error) {
+    public errors: EnvSchemaCLIErrorVO[] | undefined;
+
+    constructor(message: string, originalError?: Error, errors?: EnvSchemaCLIErrorVO[]) {
         const originalMessage = originalError ? ` (original message: ${originalError.message})` : '';
 
         super(`${message}${originalMessage}`);
@@ -19,6 +23,7 @@ export default class EnvSchemaCLIException extends Error {
         }
 
         this.name = this.constructor.name;
+        this.errors = errors;
     }
 
 }

@@ -3,10 +3,10 @@
 import envSchema from 'env-schema';
 import path from 'path';
 import fs from 'fs';
-import { ValidationError } from 'ajv';
 
 import EnvSchemaCLIException from '@src/exceptions/EnvSchemaCLI.exception.js';
 import OASJSONDefinitionsRetrieveService from '@src/shared/OASJSONDefinitionsRetrieve.service.js';
+import EnvSchemaCLIErrorVO, { TEnvSchemaErrors } from '@src/core/EnvSchemaCLIError.valueobject.js';
 
 type TSchema = {
     file: string | null;
@@ -16,7 +16,6 @@ type TSchema = {
 
 export default class EnvSchemaCoreService {
 
-    readonly #env: Record<string, any> | null;
     readonly #schema: TSchema;
     readonly #envFileFullPath: string | null;
     readonly #definitionsRetrieveService: OASJSONDefinitionsRetrieveService;
@@ -27,10 +26,9 @@ export default class EnvSchemaCoreService {
     // Exposes the `schema` getter`.
     // Stores envFilePath in private `_envFilePath`. 
     constructor(schema: string | Record<string, any>, envFile?: string) {
-
         this.run = this.run.bind(this);
+        this.validate = this.validate.bind(this);
 
-        this.#env = null;
         this.#schema = {
             file: this.isString(schema) ? schema as string : null,
             value: this.isObject(schema) ? schema as Record<string, any> : null,
@@ -50,46 +48,35 @@ export default class EnvSchemaCoreService {
         return this.#schema;
     }
 
-    public get env(): Record<string, any> | null {
-        return this.#env;
-    }
-
-    // This has to prepare schema (load from file or URL) and `envFilePath`.
-    // It then runs `.validate()` with these parameters.
-    // It should check the env file exists (construct full name) and throw EnvSchemaException if not.
-    // It should delegate to my schema loader module loading the schema and re-throw EnvSchemaException
-    // WRITE:;
-    public async run(): Promise<void> {
+    public async run(): Promise<Record<string, any>> {
         if (this.#schema.isFileOrURL) {
-            try {
-                this.#schema.value = await this.#definitionsRetrieveService.retrieve(this.#schema.file as string) as Record<string, any>;
-            } catch (_error) {
-                const error = _error as Error;
-                throw new EnvSchemaCLIException(error.message); // Re-throw the current domain exception
-            }
-
+            this.#schema.value = await this.provideSchemaOrThrow();
         }
 
+        try {
+            return this.validate(this.#schema.value!, this.#envFileFullPath);
+        } catch (_error) {
+            console.dir(_error);
+            
+            throw this.prepareEnvSchemaErrorException(_error);
+        }
     }
 
     /**
      * IMPORTANT: Running `envSchema` throws if the env value is missing or does not match schema.
      * It seems to unset loaded variables if the validation fails.
-     * 
      */
-    public validate(schema: Record<string, any>, envFileFullPath?: string): Record<string, any> {
-        const config = envSchema({
-            schema: schema,
-            // data: data, // optional, default: process.env
-            dotenv: true // load .env if it is there, default: false
-        });
+    public validate(schema: Record<string, any>, envFileFullPath: string | null): Record<string, any> {
+        const dotEnvConfig = envFileFullPath ? { path: envFileFullPath } : true;
 
-        return config;
+        return envSchema({
+            schema: schema,
+            dotenv: dotEnvConfig
+        });
     }
 
     private isString(maybeString: any): boolean {
         return typeof maybeString === 'string';
-
     }
 
     private isObject(maybeObject: any): boolean {
@@ -111,6 +98,31 @@ export default class EnvSchemaCoreService {
         }
 
         return fullPath;
+    }
+
+    private async provideSchemaOrThrow(): Promise<Record<string, any>> {
+        try {
+            return await this.#definitionsRetrieveService.retrieve(this.#schema.file as string) as Record<string, any>;
+        } catch (_error) {
+            const error = _error as Error;
+            throw new EnvSchemaCLIException(error.message); // NB: Re-throw the current domain exception
+        }
+    }
+
+    private prepareEnvSchemaErrorException(error_: unknown): EnvSchemaCLIException {
+        const error = error_ as TEnvSchemaErrors;
+
+        const errors = error.errors.map((error: TEnvSchemaErrors['errors'][number]) => {
+            return new EnvSchemaCLIErrorVO(error);
+        });
+
+        return new EnvSchemaCLIException(this.prepareEnvSchemaErrorMessage(), undefined, errors);
+    }
+
+    private prepareEnvSchemaErrorMessage(): string {
+        const envFile = this.#envFileFullPath ?? `${process.cwd()}.env`;
+        const prefix = `The provided env at "${envFile}" does not conform`;
+        return this.#schema.isFileOrURL ? `${prefix} to schema at "${this.#schema.file}"` : 'to the given schema object.';
     }
 
 }

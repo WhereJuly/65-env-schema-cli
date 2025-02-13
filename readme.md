@@ -1,10 +1,14 @@
 # `env-schema` CLI
 
-The tint CLI and programmatic wrapper for [`env-schema`](https://www.npmjs.com/package/env-schema) environment variables validator.
+The tiny CLI and programmatic wrapper for [`env-schema`](https://www.npmjs.com/package/env-schema) environment variables validator.
 
-Its purpose is to be used as CLI in a separate build / CI step or being programmatically engaged in your build pipeline.
+Its purpose is to be used as CLI in a separate build / CI step or being programmatically engaged in your build pipeline. It provides convenient one or multiple env files validation to ensure they all conform to the same [JSON Schema](https://json-schema.org/) schema you define.
 
-Provides convenient multiple env files validation to ensure they all conform to the same [JSON Schema](https://json-schema.org/) schema. The actual schema can be either local `.js` or JSON file or URL.
+**How it works**
+
+- Pass the package your env's JSON schema either as local JSON file or URL (or as object for programmatic usage).
+- Optionally provide one or multiple `.env` files to check vs the schema. Otherwise it defaults to `.env` at the your project root.
+- The file(s) either pass the check or the package errors when values mismatch with the JSON schema.
 
 ---
 
@@ -23,8 +27,6 @@ Provides convenient multiple env files validation to ensure they all conform to 
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
-
-
 
 ---
 

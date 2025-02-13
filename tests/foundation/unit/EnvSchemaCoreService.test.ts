@@ -76,7 +76,7 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
             const service = new EnvSchemaCoreService(fixtures.schemaFileJSON);
             const actual = service.run;
 
-            await expect(actual()).resolves.toBeUndefined();
+            await expect(actual()).resolves.toEqual({ DUMMY: 'development' });
         });
 
         it('Should successfully run for schema at URL, no throw', async () => {
@@ -87,7 +87,7 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
             const service = new EnvSchemaCoreService(url);
             const actual = service.run;
 
-            await expect(actual()).resolves.toBeUndefined();
+            await expect(actual()).resolves.toEqual({ DUMMY: 'development' });
         });
 
     });
@@ -123,7 +123,6 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
         }
 
     });
-
 
     // Assert: retrieve file
     // Assert: retrieve URL
