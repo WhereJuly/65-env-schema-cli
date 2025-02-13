@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import EnvSchemaCoreService from '@src/core/EnvSchemaCore.service.js';
 import EnvSchemaCLIException from '@src/exceptions/EnvSchemaCLI.exception.js';
 
-const envFake = 'tests/foundation/.ancillary/fixtures/.env.fake';
+import fixtures from '@tests/foundation/.ancillary/fixtures/index.js';
 
 describe('[unit] EnvSchemaCoreServiceTest', () => {
 
@@ -53,7 +53,7 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
     });
 
     it('+constructor() #4: Should successfully accept "envFile" argument', () => {
-        const actual = () => { new EnvSchemaCoreService('dummy', envFake); }; // NOSONAR
+        const actual = () => { new EnvSchemaCoreService('dummy', fixtures.envFile); }; // NOSONAR
 
         expect(actual).not.toThrow();
     });
@@ -69,6 +69,8 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
     // Assert: env file existence throws 
 
     it('+run(): Should successfully prepare for and run validator', () => {
+        const actual = () => { new EnvSchemaCoreService('tests/foundation/.ancillary/fixtures/schema.fixture.json', 'missing-env-file'); }; // NOSONAR
+
     });
 
     // Assert: retrieve file
