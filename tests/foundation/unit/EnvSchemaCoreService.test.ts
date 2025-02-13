@@ -124,14 +124,6 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
 
     });
 
-    // Assert: retrieve file
-    // Assert: retrieve URL
-    // Assert: retrieve throws for missing schema file
-    // Assert: retrieve throws for non-json schema file
-    // Assert: retrieve URL throws for HTTP error
-
-
-
 });
 
 
