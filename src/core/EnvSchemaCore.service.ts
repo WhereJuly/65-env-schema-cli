@@ -16,9 +16,10 @@ type TSchema = {
 
 export default class EnvSchemaCoreService {
 
-    readonly #definitionsRetrieveService: OASJSONDefinitionsRetrieveService;
+    readonly #env: Record<string, any> | null;
     readonly #schema: TSchema;
     readonly #envFileFullPath: string | null;
+    readonly #definitionsRetrieveService: OASJSONDefinitionsRetrieveService;
 
     // This should save the input arguments making them available for `.run()` method.
     // Analyzes `schema`, if `string` puts the value to private `_schema.string`, otherwise in `_schema.object`;
@@ -27,6 +28,9 @@ export default class EnvSchemaCoreService {
     // Stores envFilePath in private `_envFilePath`. 
     constructor(schema: string | Record<string, any>, envFile?: string) {
 
+        this.run = this.run.bind(this);
+
+        this.#env = null;
         this.#schema = {
             file: this.isString(schema) ? schema as string : null,
             value: this.isObject(schema) ? schema as Record<string, any> : null,
@@ -46,6 +50,10 @@ export default class EnvSchemaCoreService {
         return this.#schema;
     }
 
+    public get env(): Record<string, any> | null {
+        return this.#env;
+    }
+
     // This has to prepare schema (load from file or URL) and `envFilePath`.
     // It then runs `.validate()` with these parameters.
     // It should check the env file exists (construct full name) and throw EnvSchemaException if not.
@@ -53,8 +61,13 @@ export default class EnvSchemaCoreService {
     // WRITE:;
     public async run(): Promise<void> {
         if (this.#schema.isFileOrURL) {
-            // WRITE: TDD
-            this.#schema.value = await this.#definitionsRetrieveService.retrieve(this.#schema.file as string) as Record<string, any>;
+            try {
+                this.#schema.value = await this.#definitionsRetrieveService.retrieve(this.#schema.file as string) as Record<string, any>;
+            } catch (_error) {
+                const error = _error as Error;
+                throw new EnvSchemaCLIException(error.message); // Re-throw the current domain exception
+            }
+
         }
 
     }

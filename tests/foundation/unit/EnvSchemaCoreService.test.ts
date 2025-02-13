@@ -2,10 +2,15 @@
 
 import { describe, expect, it } from 'vitest';
 
+import nock from 'nock';
+
 import EnvSchemaCoreService from '@src/core/EnvSchemaCore.service.js';
 import EnvSchemaCLIException from '@src/exceptions/EnvSchemaCLI.exception.js';
 
 import fixtures from '@tests/foundation/.ancillary/fixtures/index.js';
+
+const base = 'http://127.0.0.1:5000';
+const server = nock(base);
 
 describe('[unit] EnvSchemaCoreServiceTest', () => {
 
@@ -65,17 +70,67 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
         expect(actual).toThrowError('missing-env-file" does not exist.');
     });
 
-    // Assert: env file exists
-    // Assert: env file existence throws 
+    describe('+run() #1: Should not throw for JSON file or URL', async () => {
 
-    it('+run(): Should successfully prepare for and run validator', () => {
-        const actual = () => { new EnvSchemaCoreService('tests/foundation/.ancillary/fixtures/schema.fixture.json', 'missing-env-file'); }; // NOSONAR
+        it('Should successfully run for existing JSON schema, no throw', async () => {
+            const service = new EnvSchemaCoreService(fixtures.schemaFileJSON);
+            const actual = service.run;
+
+            await expect(actual()).resolves.toBeUndefined();
+        });
+
+        it('Should successfully run for schema at URL, no throw', async () => {
+            const path = '/json/valid';
+            const url = `${base}${path}`;
+            server.get(path).reply(200, fixtures.schema_json);
+
+            const service = new EnvSchemaCoreService(url);
+            const actual = service.run;
+
+            await expect(actual()).resolves.toBeUndefined();
+        });
 
     });
 
+    describe('+run() #2: Should throw for missing or invalid schema file', async () => {
+
+        it.each(dataProvider_run_throws_schema_files())('Case #%# $name', async (data) => {
+            const service = new EnvSchemaCoreService(data.schema);
+            const actual = service.run;
+
+            await expect(actual).rejects.toThrow(EnvSchemaCLIException);
+            await expect(actual).rejects.toThrowError(data.message);
+        });
+
+        it('Should throw for missing URL', async () => {
+            const path = '/json/invalid';
+            const url = `${base}${path}`;
+            server.get(path).reply(400, fixtures.schema_json);
+
+            const service = new EnvSchemaCoreService(url);
+            const actual = service.run;
+
+            await expect(actual).rejects.toThrow(EnvSchemaCLIException);
+            await expect(actual).rejects.toThrowError('network error');
+        });
+
+        function dataProvider_run_throws_schema_files() {
+            return [
+                { name: 'Missing schema file', schema: 'missing-schema-file.json', message: 'missing-schema-file.json" does not exist.' },
+                { name: 'Missing .json extension', schema: 'missing-schema-file', message: "must have a '.json' extension" },
+                { name: 'Throws for .js extension', schema: fixtures.schemaFileJS, message: "must have a '.json' extension" },
+            ];
+        }
+
+    });
+
+
     // Assert: retrieve file
     // Assert: retrieve URL
-    // Assert: retrieve throws
+    // Assert: retrieve throws for missing schema file
+    // Assert: retrieve throws for non-json schema file
+    // Assert: retrieve URL throws for HTTP error
+
 
 
 });
