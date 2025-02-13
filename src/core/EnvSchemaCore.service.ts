@@ -51,8 +51,6 @@ export default class EnvSchemaCoreService {
         try {
             return this.validate(this.#schema.value!, this.#envFileFullPath);
         } catch (_error) {
-            console.dir(_error);
-
             throw this.prepareEnvSchemaErrorException(_error);
         }
     }
@@ -63,10 +61,6 @@ export default class EnvSchemaCoreService {
      */
     public validate(schema: Record<string, any>, envFileFullPath: string | null): Record<string, any> {
         const dotEnvConfig = envFileFullPath ? { path: envFileFullPath } : true;
-
-
-        console.log(schema);
-        console.dir(dotEnvConfig);
 
         return envSchema({
             schema: schema,

@@ -22,12 +22,18 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
             expect(actual).toEqual({ DUMMY: 'development' });
         });
 
-        it.only('Should successfully run for existing JSON schema file and custom env file', async () => {
+        it('Should successfully run for existing JSON schema file and custom env file', async () => {
             const service = new EnvSchemaCoreService(fixtures.schemaFakeJSON, fixtures.envFakeFile);
 
             const actual = await service.run();
 
-            console.dir(actual);
+            expect(actual).toEqual({ ENV: 'fake' });
+        });
+
+        it.todo('Should successfully run JSON schema from JS object and default env', async () => {
+        });
+
+        it.todo('Should throw with array of EnvSchemaCLIErrorVO', async () => {
         });
 
     });
