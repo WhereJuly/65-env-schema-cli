@@ -1,0 +1,29 @@
+{
+    "name": "@wherejuly/env-schema-cli",
+    "version": "0.1.0",
+    "description": "The CLI and a programmatic wrapper for [env-schema](https://www.npmjs.com/package/env-schema) environment variables validator.",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "env",
+        "environment",
+        "json",
+        "schema",
+        "json-schema",
+        "ajv",
+        "dotenv",
+        "variables",
+        "validate"
+    ],
+    "license": "MIT",
+    "author": "valentineshi.dev@gmail.com",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/WhereJuly/60-1-oas-markdown-merger.git"
+    },
+    "homepage": "https://github.com/WhereJuly/60-1-oas-markdown-merger#readme",
+    "issues": "https://github.com/WhereJuly/60-1-oas-markdown-merger/issues"
+}
