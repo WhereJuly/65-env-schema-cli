@@ -25,7 +25,7 @@ export default class EnvSchemaCoreService {
     // Set `_schema.isObject` to true when needed.
     // Exposes the `schema` getter`.
     // Stores envFilePath in private `_envFilePath`. 
-    constructor(schema: string | Record<string, any>, envFilePath?: string) {
+    constructor(schema: string | Record<string, any>, envFile?: string) {
 
         this.#schema = {
             file: this.isString(schema) ? schema as string : null,
@@ -37,7 +37,7 @@ export default class EnvSchemaCoreService {
             throw new EnvSchemaCLIException(`The "schema" argument must be either a string or an object, "${typeof schema}" provided.`);
         }
 
-        this.#envFileFullPath = this.constructFullFilePathOrThrow(envFilePath);
+        this.#envFileFullPath = this.constructFullFilePathOrThrow(envFile);
 
         this.#definitionsRetrieveService = new OASJSONDefinitionsRetrieveService();
     }
@@ -93,7 +93,7 @@ export default class EnvSchemaCoreService {
         const fullPath = path.resolve(process.cwd(), envFilePath);
 
         // WRITE: assert;
-        if (!fs.existsSync(path.dirname(fullPath))) {
+        if (!fs.existsSync(fullPath)) {
             throw new EnvSchemaCLIException(`The file at given 'envFilePath' "${fullPath}" does not exist.`);
         }
 

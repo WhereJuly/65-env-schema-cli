@@ -5,6 +5,8 @@ import { describe, expect, it } from 'vitest';
 import EnvSchemaCoreService from '@src/core/EnvSchemaCore.service.js';
 import EnvSchemaCLIException from '@src/exceptions/EnvSchemaCLI.exception.js';
 
+const envFake = 'tests/foundation/.ancillary/fixtures/.env.fake';
+
 describe('[unit] EnvSchemaCoreServiceTest', () => {
 
     it('+constructor() #1: Should create EnvSchemaCoreService expected object', () => {
@@ -50,8 +52,28 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
         expect(actual).toThrowError('"number" provided');
     });
 
+    it('+constructor() #4: Should successfully accept "envFile" argument', () => {
+        const actual = () => { new EnvSchemaCoreService('dummy', envFake); }; // NOSONAR
+
+        expect(actual).not.toThrow();
+    });
+
+    it('+constructor() #5: Should throw for missing "envFile" file', () => {
+        const actual = () => { new EnvSchemaCoreService('dummy', 'missing-env-file'); }; // NOSONAR
+
+        expect(actual).toThrow(EnvSchemaCLIException);
+        expect(actual).toThrowError('missing-env-file" does not exist.');
+    });
+
+    // Assert: env file exists
+    // Assert: env file existence throws 
+
     it('+run(): Should successfully prepare for and run validator', () => {
     });
+
+    // Assert: retrieve file
+    // Assert: retrieve URL
+    // Assert: retrieve throws
 
 
 });
