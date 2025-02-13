@@ -2,25 +2,28 @@
 
 const basePath = './tests/foundation/.ancillary/fixtures';
 
-const schemaFileJS = `${basePath}/schema.fixture.js`;
-const schemaFileJSON = `${basePath}/schema.fixture.json`;
-const envFile = `${basePath}/.env.fake`;
+const schemaDefaultJS = `${basePath}/schema.default.js`;
+const schemaDefaultJSON = `${basePath}/schema.default.json`;
+const schemaFakeJSON = `${basePath}/schema.fake.json`;
+const envFakeFile = `${basePath}/.env.fake`;
 
-import schema_json from './schema.fixture.json' assert { type: 'json' };
+import schema_json from './schema.default.json' assert { type: 'json' };
 
 export {
     basePath,
-    schemaFileJS,
-    schemaFileJSON,
-    envFile,
+    schemaDefaultJS,
+    schemaDefaultJSON,
+    schemaFakeJSON,
+    envFakeFile,
     schema_json
 };
 
 const index = {
     basePath,
-    schemaFileJS,
-    schemaFileJSON,
-    envFile,
+    schemaDefaultJS,
+    schemaDefaultJSON,
+    schemaFakeJSON,
+    envFakeFile,
     schema_json
 };
 

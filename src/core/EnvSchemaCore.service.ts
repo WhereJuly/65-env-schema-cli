@@ -20,11 +20,6 @@ export default class EnvSchemaCoreService {
     readonly #envFileFullPath: string | null;
     readonly #definitionsRetrieveService: OASJSONDefinitionsRetrieveService;
 
-    // This should save the input arguments making them available for `.run()` method.
-    // Analyzes `schema`, if `string` puts the value to private `_schema.string`, otherwise in `_schema.object`;
-    // Set `_schema.isObject` to true when needed.
-    // Exposes the `schema` getter`.
-    // Stores envFilePath in private `_envFilePath`. 
     constructor(schema: string | Record<string, any>, envFile?: string) {
         this.run = this.run.bind(this);
         this.validate = this.validate.bind(this);
@@ -57,7 +52,7 @@ export default class EnvSchemaCoreService {
             return this.validate(this.#schema.value!, this.#envFileFullPath);
         } catch (_error) {
             console.dir(_error);
-            
+
             throw this.prepareEnvSchemaErrorException(_error);
         }
     }
@@ -68,6 +63,10 @@ export default class EnvSchemaCoreService {
      */
     public validate(schema: Record<string, any>, envFileFullPath: string | null): Record<string, any> {
         const dotEnvConfig = envFileFullPath ? { path: envFileFullPath } : true;
+
+
+        console.log(schema);
+        console.dir(dotEnvConfig);
 
         return envSchema({
             schema: schema,

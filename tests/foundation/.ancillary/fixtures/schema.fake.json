@@ -1,0 +1,9 @@
+{
+    "type": "object",
+    "required": ["ENV"],
+    "properties": {
+        "ENV": {
+            "type": "string"
+        }
+    }
+}

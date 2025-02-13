@@ -58,7 +58,7 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
     });
 
     it('+constructor() #4: Should successfully accept "envFile" argument', () => {
-        const actual = () => { new EnvSchemaCoreService('dummy', fixtures.envFile); }; // NOSONAR
+        const actual = () => { new EnvSchemaCoreService('dummy', fixtures.envFakeFile); }; // NOSONAR
 
         expect(actual).not.toThrow();
     });
@@ -73,7 +73,7 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
     describe('+run() #1: Should not throw for JSON file or URL', async () => {
 
         it('Should successfully run for existing JSON schema, no throw', async () => {
-            const service = new EnvSchemaCoreService(fixtures.schemaFileJSON);
+            const service = new EnvSchemaCoreService(fixtures.schemaDefaultJSON);
             const actual = service.run;
 
             await expect(actual()).resolves.toBeDefined();
@@ -118,7 +118,7 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
             return [
                 { name: 'Missing schema file', schema: 'missing-schema-file.json', message: 'missing-schema-file.json" does not exist.' },
                 { name: 'Missing .json extension', schema: 'missing-schema-file', message: "must have a '.json' extension" },
-                { name: 'Throws for .js extension', schema: fixtures.schemaFileJS, message: "must have a '.json' extension" },
+                { name: 'Throws for .js extension', schema: fixtures.schemaDefaultJS, message: "must have a '.json' extension" },
             ];
         }
 
