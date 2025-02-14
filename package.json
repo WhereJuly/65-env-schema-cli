@@ -41,12 +41,13 @@
         "@types/node": "^22.13.2",
         "@typescript-eslint/eslint-plugin": "^8.24.0",
         "@typescript-eslint/parser": "^8.24.0",
+        "@vitest/coverage-v8": "^2.1.9",
         "eslint": "^9.20.1",
         "nock": "^14.0.1",
         "tsx": "^4.19.2",
         "typescript": "^5.7.3",
         "typescript-eslint": "^8.24.0",
-        "vitest": "^2.1.4"
+        "vitest": "^2.1.9"
     },
     "dependencies": {
         "env-schema": "^6.0.1",

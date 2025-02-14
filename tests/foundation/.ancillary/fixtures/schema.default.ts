@@ -2,8 +2,9 @@
 
 export default {
     type: 'object',
+    required: ['DUMMY'],
     properties: {
-        dummy: {
+        DUMMY: {
             type: 'string'
         }
     }

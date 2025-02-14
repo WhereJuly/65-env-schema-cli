@@ -17,7 +17,7 @@ type TSchema = {
 export default class EnvSchemaCoreService {
 
     readonly #schema: TSchema;
-    readonly #envFileFullPath: string | null;
+    readonly #envFileFullPath: string;
     readonly #definitionsRetrieveService: OASJSONDefinitionsRetrieveService;
 
     constructor(schema: string | Record<string, any>, envFile?: string) {
@@ -57,15 +57,27 @@ export default class EnvSchemaCoreService {
 
     /**
      * IMPORTANT: Running `envSchema` throws if the env value is missing or does not match schema.
-     * It seems to unset loaded variables if the validation fails.
+     * If operated on `process.env` it seems to unset loaded variables if the validation fails.
      */
-    public validate(schema: Record<string, any>, envFileFullPath: string | null): Record<string, any> {
-        const dotEnvConfig = envFileFullPath ? { path: envFileFullPath } : true;
+    public validate(schema: Record<string, any>, envFileFullPath: string): Record<string, any> {
+        /**
+         * WARNING: 1) We pass `processEnv: destinationEnvVariables` to not write to `process.env`;
+         * WARNING: 2) Why we have to pass `data: destinationEnvVariables` second time is not clear from 
+         * `env-schema` docs but it the only way it works.
+         */
+        const destinationEnvVariables = {};
+        const dotEnvConfig = {
+            path: envFileFullPath,
+            processEnv: destinationEnvVariables
+        };
 
-        return envSchema({
+        envSchema({
             schema: schema,
+            data: destinationEnvVariables,
             dotenv: dotEnvConfig
         });
+
+        return destinationEnvVariables;
     }
 
     private isString(maybeString: any): boolean {
@@ -80,10 +92,10 @@ export default class EnvSchemaCoreService {
         return !!this.schema.file || !!this.schema.value;
     }
 
-    private constructFullFilePathOrThrow(envFilePath?: string): string | null {
-        if (!envFilePath) { return null; }
+    private constructFullFilePathOrThrow(envFilePath?: string): string {
+        const defaultEnvFile = '.env';
 
-        const fullPath = path.resolve(process.cwd(), envFilePath);
+        const fullPath = path.resolve(process.cwd(), envFilePath ?? defaultEnvFile);
 
         // WRITE: assert;
         if (!fs.existsSync(fullPath)) {
@@ -115,7 +127,7 @@ export default class EnvSchemaCoreService {
     private prepareEnvSchemaErrorMessage(): string {
         const envFile = this.#envFileFullPath ?? `${process.cwd()}.env`;
         const prefix = `The provided env at "${envFile}" does not conform`;
-        return this.#schema.isFileOrURL ? `${prefix} to schema at "${this.#schema.file}"` : 'to the given schema object.';
+        return this.#schema.isFileOrURL ? `${prefix} to schema at "${this.#schema.file}"` : `${prefix} to the given schema object.`;
     }
 
 }

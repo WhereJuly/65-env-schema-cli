@@ -43,6 +43,10 @@ Contents
 
 ## Usage
 
+Note the package isolates operations from any actual `process.env`. It reads the source env file(s) variables into and write the destination env variables out to internal objects and operates on them.
+
+The `.run()` method returns the destination object or throws the exception that indicates invalid variables.
+
 ## Programmatic Usage
 
 ### Documentation

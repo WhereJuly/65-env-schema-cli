@@ -34,7 +34,7 @@ export default defineConfig({
         setupFiles: ['./tests/foundation/.ancillary/bootstrap/setup.ts'],
         cache: false,
         reporters: ['verbose'],
-        globals: true,
+        globals: false,
         // NB: Can be configured via TEST_INCLUDE environment variable
         exclude: excluded,
         root: fileURLToPath(new URL('../../../../', import.meta.url)),

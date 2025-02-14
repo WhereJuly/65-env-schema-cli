@@ -8,6 +8,7 @@ const schemaFakeJSON = `${basePath}/schema.fake.json`;
 const envFakeFile = `${basePath}/.env.fake`;
 
 import schema_json from './schema.default.json' assert { type: 'json' };
+import schema_js from './schema.default.js';
 
 export {
     basePath,
@@ -15,7 +16,8 @@ export {
     schemaDefaultJSON,
     schemaFakeJSON,
     envFakeFile,
-    schema_json
+    schema_json,
+    schema_js
 };
 
 const index = {
@@ -24,7 +26,8 @@ const index = {
     schemaDefaultJSON,
     schemaFakeJSON,
     envFakeFile,
-    schema_json
+    schema_json,
+    schema_js
 };
 
 export default index;
