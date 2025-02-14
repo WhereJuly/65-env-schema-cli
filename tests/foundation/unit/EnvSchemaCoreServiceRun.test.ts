@@ -62,6 +62,73 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
         });
 
     });
+    describe('+run() #1: Should not throw for JSON file or URL', async () => {
+
+        it('Should successfully run for existing JSON schema, no throw', async () => {
+            const service = new EnvSchemaCoreService(fixtures.schemaDefaultJSON);
+            const actual = service.run;
+
+            await expect(actual()).resolves.toBeDefined();
+        });
+
+        it('Should successfully run for schema at URL, no throw', async () => {
+            const path = '/json/valid';
+            const url = `${base}${path}`;
+            server.get(path).reply(200, fixtures.schema_json);
+
+            const service = new EnvSchemaCoreService(url);
+            const actual = service.run;
+
+            await expect(actual()).resolves.toBeDefined();
+        });
+
+    });
+
+    describe('+run() #2: Should throw for missing or invalid schema file', async () => {
+
+        it.each(dataProvider_run_throws_schema_files())('Case #%# $name', async (data) => {
+            const service = new EnvSchemaCoreService(data.schema);
+            const actual = service.run;
+
+            await expect(actual).rejects.toThrow(EnvSchemaCLIException);
+            await expect(actual).rejects.toThrowError(data.message);
+        });
+
+        it('Should throw for invalid env at existing URL', async () => {
+            const path = '/json/valid';
+            const url = `${base}${path}`;
+            // WARNING: For the test to pass we have to keep nock endpoint for 2 requests
+            // Will have to clarify later.
+            server.get(path).times(2).reply(200, fixtures.schema_json);
+
+            const service = new EnvSchemaCoreService(url, fixtures.envFakeFile);
+            const actual = service.run;
+
+            await expect(actual).rejects.toThrow(EnvSchemaCLIException);
+            await expect(actual).rejects.toThrowError('at "http://127.0.0.1:5000/json/valid"');
+        });
+
+        it('Should throw for missing URL', async () => {
+            const path = '/json/invalid';
+            const url = `${base}${path}`;
+            server.get(path).reply(400, fixtures.schema_json);
+
+            const service = new EnvSchemaCoreService(url);
+            const actual = service.run;
+
+            await expect(actual).rejects.toThrow(EnvSchemaCLIException);
+            await expect(actual).rejects.toThrowError('network error');
+        });
+
+        function dataProvider_run_throws_schema_files() {
+            return [
+                { name: 'Missing schema file', schema: 'missing-schema-file.json', message: 'missing-schema-file.json" does not exist.' },
+                { name: 'Missing .json extension', schema: 'missing-schema-file', message: "must have a '.json' extension" },
+                { name: 'Throws for .js extension', schema: fixtures.schemaDefaultJS, message: "must have a '.json' extension" },
+            ];
+        }
+
+    });
 
 });
 
