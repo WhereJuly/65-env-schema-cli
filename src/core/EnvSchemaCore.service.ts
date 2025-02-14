@@ -17,7 +17,7 @@ type TSchema = {
 export default class EnvSchemaCoreService {
 
     readonly #schema: TSchema;
-    readonly #envFileFullPath: string;
+    readonly _envFileFullPath: string;
     readonly #definitionsRetrieveService: OASJSONDefinitionsRetrieveService;
 
     constructor(schema: string | Record<string, any>, envFile?: string) {
@@ -34,7 +34,7 @@ export default class EnvSchemaCoreService {
             throw new EnvSchemaCLIException(`The "schema" argument must be either a string or an object, "${typeof schema}" provided.`);
         }
 
-        this.#envFileFullPath = this.constructFullFilePathOrThrow(envFile);
+        this._envFileFullPath = this.constructFullFilePathOrThrow(envFile);
 
         this.#definitionsRetrieveService = new OASJSONDefinitionsRetrieveService();
     }
@@ -49,7 +49,7 @@ export default class EnvSchemaCoreService {
         }
 
         try {
-            return this.validate(this.#schema.value!, this.#envFileFullPath);
+            return this.validate(this.#schema.value!, this._envFileFullPath);
         } catch (_error) {
             throw this.prepareEnvSchemaErrorException(_error);
         }
@@ -125,7 +125,7 @@ export default class EnvSchemaCoreService {
     }
 
     private prepareEnvSchemaErrorMessage(): string {
-        const prefix = `The provided env at "${this.#envFileFullPath}" does not conform`;
+        const prefix = `The provided env at "${this._envFileFullPath}" does not conform`;
         return this.#schema.isFileOrURL ?
             `${prefix} to schema at "${this.schema.schemaFileOrURL}"` :
             `${prefix} to the given schema object.`;
