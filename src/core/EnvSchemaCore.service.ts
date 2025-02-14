@@ -9,7 +9,7 @@ import OASJSONDefinitionsRetrieveService from '@src/shared/OASJSONDefinitionsRet
 import EnvSchemaCLIErrorVO, { TEnvSchemaErrors } from '@src/core/EnvSchemaCLIError.valueobject.js';
 
 type TSchema = {
-    file: string | null;
+    schemaFileOrURL: string | null;
     value: Record<string, any> | null;
     isFileOrURL: boolean;
 };
@@ -25,7 +25,7 @@ export default class EnvSchemaCoreService {
         this.validate = this.validate.bind(this);
 
         this.#schema = {
-            file: this.isString(schema) ? schema as string : null,
+            schemaFileOrURL: this.isString(schema) ? schema as string : null,
             value: this.isObject(schema) ? schema as Record<string, any> : null,
             isFileOrURL: this.isString(schema)
         };
@@ -89,7 +89,7 @@ export default class EnvSchemaCoreService {
     }
 
     private isValidSchemaArgument(): boolean {
-        return !!this.schema.file || !!this.schema.value;
+        return !!this.schema.schemaFileOrURL || !!this.schema.value;
     }
 
     private constructFullFilePathOrThrow(envFilePath?: string): string {
@@ -107,7 +107,7 @@ export default class EnvSchemaCoreService {
 
     private async provideSchemaOrThrow(): Promise<Record<string, any>> {
         try {
-            return await this.#definitionsRetrieveService.retrieve(this.#schema.file as string) as Record<string, any>;
+            return await this.#definitionsRetrieveService.retrieve(this.#schema.schemaFileOrURL as string) as Record<string, any>;
         } catch (_error) {
             const error = _error as Error;
             throw new EnvSchemaCLIException(error.message); // NB: Re-throw the current domain exception
@@ -125,9 +125,10 @@ export default class EnvSchemaCoreService {
     }
 
     private prepareEnvSchemaErrorMessage(): string {
-        const envFile = this.#envFileFullPath ?? `${process.cwd()}.env`;
-        const prefix = `The provided env at "${envFile}" does not conform`;
-        return this.#schema.isFileOrURL ? `${prefix} to schema at "${this.#schema.file}"` : `${prefix} to the given schema object.`;
+        const prefix = `The provided env at "${this.#envFileFullPath}" does not conform`;
+        return this.#schema.isFileOrURL ?
+            `${prefix} to schema at "${this.schema.schemaFileOrURL}"` :
+            `${prefix} to the given schema object.`;
     }
 
 }

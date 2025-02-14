@@ -22,7 +22,7 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
         expect(actual.run).toBeInstanceOf(Function);
         expect(actual.validate).toBeInstanceOf(Function);
 
-        expect(actual.schema).toHaveProperty('file');
+        expect(actual.schema).toHaveProperty('schemaFileOrURL');
         expect(actual.schema).toHaveProperty('value');
         expect(actual.schema).toHaveProperty('isFileOrURL');
     });
@@ -34,7 +34,7 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
 
             const actual = service.schema;
 
-            expect(actual.file).toEqual(data.file);
+            expect(actual.schemaFileOrURL).toEqual(data.file);
             expect(actual.value).toEqual(data.value);
             expect(actual.isFileOrURL).toEqual(data.is_ile_or_url);
         });
@@ -100,6 +100,20 @@ describe('[unit] EnvSchemaCoreServiceTest', () => {
 
             await expect(actual).rejects.toThrow(EnvSchemaCLIException);
             await expect(actual).rejects.toThrowError(data.message);
+        });
+
+        it('Should throw for invalid env at existing URL', async () => {
+            const path = '/json/valid';
+            const url = `${base}${path}`;
+            // WARNING: For the test to pass we have to keep nock endpoint for 2 requests
+            // Will have to clarify later.
+            server.get(path).times(2).reply(200, fixtures.schema_json);
+
+            const service = new EnvSchemaCoreService(url, fixtures.envFakeFile);
+            const actual = service.run;
+
+            await expect(actual).rejects.toThrow(EnvSchemaCLIException);
+            await expect(actual).rejects.toThrowError('at "http://127.0.0.1:5000/json/valid"');
         });
 
         it('Should throw for missing URL', async () => {

@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-// import nock from 'nock';
+import nock from 'nock';
 
 import EnvSchemaCoreService from '@src/core/EnvSchemaCore.service.js';
 
@@ -10,8 +10,8 @@ import fixtures from '@tests/foundation/.ancillary/fixtures/index.js';
 import EnvSchemaCLIException from '@src/exceptions/EnvSchemaCLI.exception.js';
 import EnvSchemaCLIErrorVO from '@src/core/EnvSchemaCLIError.valueobject.js';
 
-// const base = 'http://127.0.0.1:5000';
-// const server = nock(base);
+const base = 'http://127.0.0.1:5000';
+const server = nock(base);
 
 describe('[unit] EnvSchemaCoreServiceRunTest', () => {
 
@@ -61,14 +61,7 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
             }
         });
 
-
-        it.todo('Should throw with array of EnvSchemaCLIErrorVO', async () => {
-        });
-
     });
-
-    // Assert: success JS object;
-    // Assert: throws array of my validation errors;
 
 });
 
