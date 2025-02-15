@@ -71,6 +71,7 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
         });
 
     });
+
     describe('+run() #2: Should not throw for JSON file or URL', async () => {
 
         it('Should successfully run for existing JSON schema, no throw', async () => {
@@ -103,6 +104,23 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
             await expect(actual).rejects.toThrowError(data.message);
         });
 
+        function dataProvider_run_throws_schema_files() {
+            return [
+                { name: 'Missing schema file', schema: 'missing-schema-file.json', message: 'missing-schema-file.json" does not exist.' },
+                { name: 'Missing .json extension', schema: 'missing-schema-file', message: "must have a '.json' extension" },
+                { name: 'Throws for .js extension', schema: fixtures.schemaDefaultJS, message: "must have a '.json' extension" },
+            ];
+        }
+
+        it('Should throw for missing env file', async () => {
+            const service = new EnvSchemaCoreService(fixtures.schemaDefaultJS);
+
+            const actual = async () => { await service.run('missing-env-file'); };
+
+            await expect(actual).rejects.toThrow(EnvSchemaCLIException);
+            await expect(actual).rejects.toThrowError('missing-env-file" does not exist');
+        });
+
         it('Should throw for invalid env at existing URL', async () => {
             const path = '/json/valid';
             const url = `${base}${path}`;
@@ -128,14 +146,6 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
             await expect(actual).rejects.toThrow(EnvSchemaCLIException);
             await expect(actual).rejects.toThrowError('network error');
         });
-
-        function dataProvider_run_throws_schema_files() {
-            return [
-                { name: 'Missing schema file', schema: 'missing-schema-file.json', message: 'missing-schema-file.json" does not exist.' },
-                { name: 'Missing .json extension', schema: 'missing-schema-file', message: "must have a '.json' extension" },
-                { name: 'Throws for .js extension', schema: fixtures.schemaDefaultJS, message: "must have a '.json' extension" },
-            ];
-        }
 
     });
 
