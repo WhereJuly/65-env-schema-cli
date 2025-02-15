@@ -35,12 +35,13 @@ program
         // Normalize the env argument to array
         const envs = Array.isArray(options.env) ? options.env : [options.env];
 
+        const service = new EnvSchemaCoreService(options.schema);
+
         for (let index = 0; index < envs.length; index++) {
             try {
-                const service = new EnvSchemaCoreService(options.schema, envs[index]);
-                await service.run();
+                const result = await service.run(envs[index]);
 
-                console.log(`[${chalk.green('INFO')}] Success. The env variables in" ${service._envFileFullPath}" conforms to schema in "${service.schema.schemaFileOrURL}".`);
+                console.log(`[${chalk.green('INFO')}] Success. The env variables in" ${result.envFileFullPath}" conforms to schema in "${service.schema.schemaFileOrURL}".`);
 
             } catch (_error) {
                 const error = _error as EnvSchemaCLIException;

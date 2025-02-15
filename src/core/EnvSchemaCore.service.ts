@@ -10,31 +10,32 @@ import EnvSchemaCLIErrorVO, { TEnvSchemaErrors } from '@src/core/EnvSchemaCLIErr
 
 type TSchema = {
     schemaFileOrURL: string | null;
-    value: Record<string, any> | null;
     isFileOrURL: boolean;
+    value: Record<string, any> | null;
+    isLoaded: boolean;
 };
+
+export type TRunReturns = { envFileFullPath: string | null; env: Record<string, any>; };
 
 export default class EnvSchemaCoreService {
 
     readonly #schema: TSchema;
-    readonly _envFileFullPath: string;
     readonly #definitionsRetrieveService: OASJSONDefinitionsRetrieveService;
 
-    constructor(schema: string | Record<string, any>, envFile?: string) {
+    constructor(schema: string | Record<string, any>) {
         this.run = this.run.bind(this);
         this.validate = this.validate.bind(this);
 
         this.#schema = {
             schemaFileOrURL: this.isString(schema) ? schema as string : null,
+            isFileOrURL: this.isString(schema),
             value: this.isObject(schema) ? schema as Record<string, any> : null,
-            isFileOrURL: this.isString(schema)
+            isLoaded: false
         };
 
         if (!this.isValidSchemaArgument()) {
             throw new EnvSchemaCLIException(`The "schema" argument must be either a string or an object, "${typeof schema}" provided.`);
         }
-
-        this._envFileFullPath = this.constructFullFilePathOrThrow(envFile);
 
         this.#definitionsRetrieveService = new OASJSONDefinitionsRetrieveService();
     }
@@ -43,15 +44,22 @@ export default class EnvSchemaCoreService {
         return this.#schema;
     }
 
-    public async run(): Promise<Record<string, any>> {
-        if (this.#schema.isFileOrURL) {
-            this.#schema.value = await this.provideSchemaOrThrow();
+    /**
+     * There can be multiple files validated against the same schema.
+     */
+    public async run(envFile?: string): Promise<TRunReturns> {
+        const envFileFullPath = this.constructFullFilePathOrThrow(envFile);
+
+        if (this.shouldLoadSchema()) {
+            this.#schema.value = await this.loadSchemaOrThrow();
         }
 
         try {
-            return this.validate(this.#schema.value!, this._envFileFullPath);
+            const env = this.validate(this.#schema.value!, envFileFullPath);
+
+            return { envFileFullPath, env };
         } catch (_error) {
-            throw this.prepareEnvSchemaErrorException(_error);
+            throw this.prepareEnvSchemaErrorException(_error, envFileFullPath);
         }
     }
 
@@ -63,7 +71,7 @@ export default class EnvSchemaCoreService {
         /**
          * WARNING: 1) We pass `processEnv: destinationEnvVariables` to not write to `process.env`;
          * WARNING: 2) Why we have to pass `data: destinationEnvVariables` second time is not clear from 
-         * `env-schema` docs but it the only way it works.
+         * `env-schema` docs but it is the only way it works. Well see to it later.
          */
         const destinationEnvVariables = {};
         const dotEnvConfig = {
@@ -94,10 +102,8 @@ export default class EnvSchemaCoreService {
 
     private constructFullFilePathOrThrow(envFilePath?: string): string {
         const defaultEnvFile = '.env';
-
         const fullPath = path.resolve(process.cwd(), envFilePath ?? defaultEnvFile);
 
-        // WRITE: assert;
         if (!fs.existsSync(fullPath)) {
             throw new EnvSchemaCLIException(`The file at given 'envFilePath' "${fullPath}" does not exist.`);
         }
@@ -105,7 +111,14 @@ export default class EnvSchemaCoreService {
         return fullPath;
     }
 
-    private async provideSchemaOrThrow(): Promise<Record<string, any>> {
+    /**
+     * Check if schema should be loaded at all that it was not loaded already.
+     */
+    private shouldLoadSchema(): boolean {
+        return this.#schema.isFileOrURL && !this.#schema.isLoaded;
+    }
+
+    private async loadSchemaOrThrow(): Promise<Record<string, any>> {
         try {
             return await this.#definitionsRetrieveService.retrieve(this.#schema.schemaFileOrURL as string) as Record<string, any>;
         } catch (_error) {
@@ -114,18 +127,18 @@ export default class EnvSchemaCoreService {
         }
     }
 
-    private prepareEnvSchemaErrorException(error_: unknown): EnvSchemaCLIException {
+    private prepareEnvSchemaErrorException(error_: unknown, envFileFullPath: string): EnvSchemaCLIException {
         const error = error_ as TEnvSchemaErrors;
 
         const errors = error.errors.map((error: TEnvSchemaErrors['errors'][number]) => {
             return new EnvSchemaCLIErrorVO(error);
         });
 
-        return new EnvSchemaCLIException(this.prepareEnvSchemaErrorMessage(), undefined, errors);
+        return new EnvSchemaCLIException(this.prepareEnvSchemaErrorMessage(envFileFullPath), undefined, errors);
     }
 
-    private prepareEnvSchemaErrorMessage(): string {
-        const prefix = `The provided env at "${this._envFileFullPath}" does not conform`;
+    private prepareEnvSchemaErrorMessage(envFileFullPath: string): string {
+        const prefix = `The provided env at "${envFileFullPath}" does not conform`;
         return this.#schema.isFileOrURL ?
             `${prefix} to schema at "${this.schema.schemaFileOrURL}"` :
             `${prefix} to the given schema object.`;

@@ -1,6 +1,6 @@
 'use strict';
 
-const basePath = './tests/foundation/.ancillary/fixtures';
+const basePath = 'tests/foundation/.ancillary/fixtures';
 
 const schemaDefaultJS = `${basePath}/schema.default.js`;
 const schemaDefaultJSON = `${basePath}/schema.default.json`;

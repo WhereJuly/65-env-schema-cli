@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import nock from 'nock';
 
-import EnvSchemaCoreService from '@src/core/EnvSchemaCore.service.js';
+import EnvSchemaCoreService, { TRunReturns } from '@src/core/EnvSchemaCore.service.js';
 
 import fixtures from '@tests/foundation/.ancillary/fixtures/index.js';
 import EnvSchemaCLIException from '@src/exceptions/EnvSchemaCLI.exception.js';
@@ -13,38 +13,47 @@ import EnvSchemaCLIErrorVO from '@src/core/EnvSchemaCLIError.valueobject.js';
 const base = 'http://127.0.0.1:5000';
 const server = nock(base);
 
+const expected_ = (envFileFullPath: string | null, env: Record<string, any>): TRunReturns => { return { envFileFullPath, env }; };
+
 describe('[unit] EnvSchemaCoreServiceRunTest', () => {
 
-    describe('+run() #3: Should successfully run for JSON file or URL returning the env content', async () => {
+    describe('+run() #1: Should successfully run for JSON file or URL returning the env content', async () => {
 
         it('Should successfully run for existing JSON schema file and default .env at project root', async () => {
+            const expected = expected_('.env', { DUMMY: 'development' });
             const service = new EnvSchemaCoreService(fixtures.schemaDefaultJSON);
+
             const actual = await service.run();
 
-            expect(actual).toEqual({ DUMMY: 'development' });
+            expect(actual.envFileFullPath).toEqual(expect.stringContaining('.env'));
+            expect(actual.env).toEqual(expected.env);
         });
 
         it('Should successfully run JSON schema from JS object and default env', async () => {
+            const expected = expected_(null, { DUMMY: 'development' });
             const service = new EnvSchemaCoreService(fixtures.schema_js);
 
             const actual = await service.run();
 
-            expect(actual).toEqual({ DUMMY: 'development' });
+            expect(actual.envFileFullPath).toEqual(expect.stringContaining('.env'));
+            expect(actual.env).toEqual(expected.env);
         });
 
         it('Should successfully run for existing JSON schema file and custom env file', async () => {
-            const service = new EnvSchemaCoreService(fixtures.schemaFakeJSON, fixtures.envFakeFile);
+            const expected = expected_(fixtures.envFakeFile, { ENV: 'fake' });
+            const service = new EnvSchemaCoreService(fixtures.schemaFakeJSON);
 
-            const actual = await service.run();
+            const actual = await service.run(fixtures.envFakeFile);
 
-            expect(actual).toEqual({ ENV: 'fake' });
+            expect(actual.envFileFullPath?.replaceAll('\\', '/')).toEqual(expect.stringContaining(fixtures.envFakeFile));
+            expect(actual.env).toEqual(expected.env);
         });
 
         it('Should throw expected message for object schema and fake env', async () => {
-            const service = new EnvSchemaCoreService(fixtures.schema_js, fixtures.envFakeFile);
+            const service = new EnvSchemaCoreService(fixtures.schema_js);
 
             try {
-                const _env = await service.run();
+                const _env = await service.run(fixtures.envFakeFile);
                 // console.dir(env);
 
                 throw new Error('The test was expected to throw but it did not.');
@@ -62,7 +71,7 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
         });
 
     });
-    describe('+run() #1: Should not throw for JSON file or URL', async () => {
+    describe('+run() #2: Should not throw for JSON file or URL', async () => {
 
         it('Should successfully run for existing JSON schema, no throw', async () => {
             const service = new EnvSchemaCoreService(fixtures.schemaDefaultJSON);
@@ -84,7 +93,7 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
 
     });
 
-    describe('+run() #2: Should throw for missing or invalid schema file', async () => {
+    describe('+run() #3: Should throw for missing or invalid schema file', async () => {
 
         it.each(dataProvider_run_throws_schema_files())('Case #%# $name', async (data) => {
             const service = new EnvSchemaCoreService(data.schema);
@@ -101,8 +110,8 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
             // Will have to clarify later.
             server.get(path).times(2).reply(200, fixtures.schema_json);
 
-            const service = new EnvSchemaCoreService(url, fixtures.envFakeFile);
-            const actual = service.run;
+            const service = new EnvSchemaCoreService(url);
+            const actual = async () => { await service.run(fixtures.envFakeFile); };
 
             await expect(actual).rejects.toThrow(EnvSchemaCLIException);
             await expect(actual).rejects.toThrowError('at "http://127.0.0.1:5000/json/valid"');
