@@ -34,7 +34,6 @@ Contents
 
 - [Usage](#usage)
 - [Programmatic Usage](#programmatic-usage)
-  - [Documentation](#documentation)
 - [Maintenance](#maintenance)
   - [Contributions](#contributions)
   - [License](#license)
@@ -43,19 +42,15 @@ Contents
 
 ## Usage
 
-Note the package isolates operations from any actual `process.env`. It reads the source env file(s) variables into and write the destination env variables out to internal objects and operates on them.
-
-The `.run()` method returns the destination object or throws the exception that indicates invalid variables.
-
 ## Programmatic Usage
 
-### Documentation
+Note the package isolates operations from any actual `process.env` and it does not change the latter. It reads the source env file(s) variables into and write the destination env variables out to internal objects and operates on them.
 
-The package is written in TypeScript with the careful JSDoc blocks available on hover for public interface (e.g. in VS Code).
+The `.run(envFile: string)` method returns [`TRunReturns`](src/core/EnvSchemaCore.service.ts) object or throws the exception that indicates invalid variables.
 
 ## Maintenance
 
-The project is production-ready and actively maintained.
+The package is written in TypeScript with the informative JSDoc blocks available on hover for public interface (e.g. in VS Code) for comfortable programmatic usage. The code is carefully crafted with TDD allowing simple extension. The project is production-ready and actively maintained.
 
 ### Contributions
 
@@ -65,4 +60,4 @@ If there is a [pull request](https://github.com/WhereJuly/65-env-schema-cli/pull
 
 ### License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.

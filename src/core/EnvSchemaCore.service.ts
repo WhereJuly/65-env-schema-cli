@@ -132,7 +132,7 @@ export default class EnvSchemaCoreService {
 
         // NB: This is the invalid JSON schema error
         if (!Object.hasOwn(error, 'errors')) {
-            throw new EnvSchemaCLIException(`The schema at ${this.schema.schemaFileOrURL} is invalid.`, error as Error);
+            throw new EnvSchemaCLIException(`The schema at "${this.schema.schemaFileOrURL}" is invalid.`, error as Error);
         }
 
         // NB: Here the given JSON schema is valid, but env values are not. 

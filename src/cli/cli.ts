@@ -40,22 +40,24 @@ program
         for (let index = 0; index < envs.length; index++) {
             try {
                 const result = await service.run(envs[index]);
-
-                console.log(`[${chalk.green('INFO')}] Success. The env variables in" ${result.envFileFullPath}" conforms to schema in "${service.schema.schemaFileOrURL}".`);
-
+                console.log(`[${chalk.green('INFO')}] The env variables in "${result.envFileFullPath}" conforms to schema in "${service.schema.schemaFileOrURL}".`);
             } catch (_error) {
                 const error = _error as EnvSchemaCLIException;
-
                 console.log(`\n\r[${chalk.red('ERROR')}]: ${error.message}.`);
-                console.log('\nThe following errors were encountered:');
-                error.errors?.forEach((error: EnvSchemaCLIErrorVO) => {
-                    console.log(` - ${error.message}`);
-                });
-
+                showEnvErrors(error);
                 program.error('');
             }
         }
     });
+
+function showEnvErrors(error: EnvSchemaCLIException) {
+    if (!error.errors) { return; }
+
+    console.log('\nThe following errors were encountered:');
+    error.errors?.forEach((error: EnvSchemaCLIErrorVO) => {
+        console.log(` - ${error.message}`);
+    });
+}
 
 async function main() {
     await program.parseAsync(process.argv);

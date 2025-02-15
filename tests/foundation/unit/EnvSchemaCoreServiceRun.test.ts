@@ -155,7 +155,7 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
             const actual = service.run;
 
             await expect(actual).rejects.toThrow(EnvSchemaCLIException);
-            await expect(actual).rejects.toThrowError(`The schema at ${url} is invalid`);
+            await expect(actual).rejects.toThrowError(`The schema at "${url}" is invalid`);
         });
 
     });
