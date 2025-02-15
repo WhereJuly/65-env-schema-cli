@@ -7,6 +7,7 @@ import nock from 'nock';
 import EnvSchemaCoreService, { TRunReturns } from '@src/core/EnvSchemaCore.service.js';
 
 import fixtures from '@tests/foundation/.ancillary/fixtures/index.js';
+
 import EnvSchemaCLIException from '@src/exceptions/EnvSchemaCLI.exception.js';
 import EnvSchemaCLIErrorVO from '@src/core/EnvSchemaCLIError.valueobject.js';
 
@@ -84,7 +85,7 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
         it('Should successfully run for schema at URL, no throw', async () => {
             const path = '/json/valid';
             const url = `${base}${path}`;
-            server.get(path).reply(200, fixtures.schema_json);
+            server.get(path).times(2).reply(200, fixtures.schema_json);
 
             const service = new EnvSchemaCoreService(url);
             const actual = service.run;
@@ -145,6 +146,16 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
 
             await expect(actual).rejects.toThrow(EnvSchemaCLIException);
             await expect(actual).rejects.toThrowError('network error');
+        });
+
+        it('Should throw for valid URL returning not JSON schema', async () => {
+            const url = 'https://jsonplaceholder.typicode.com/todos/1';
+            const service = new EnvSchemaCoreService(url);
+
+            const actual = service.run;
+
+            await expect(actual).rejects.toThrow(EnvSchemaCLIException);
+            await expect(actual).rejects.toThrowError(`The schema at ${url} is invalid`);
         });
 
     });

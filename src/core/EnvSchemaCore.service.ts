@@ -128,9 +128,15 @@ export default class EnvSchemaCoreService {
     }
 
     private prepareEnvSchemaErrorException(error_: unknown, envFileFullPath: string): EnvSchemaCLIException {
-        const error = error_ as TEnvSchemaErrors;
+        const error = error_ as TEnvSchemaErrors | Error;
 
-        const errors = error.errors.map((error: TEnvSchemaErrors['errors'][number]) => {
+        // NB: This is the invalid JSON schema error
+        if (!Object.hasOwn(error, 'errors')) {
+            throw new EnvSchemaCLIException(`The schema at ${this.schema.schemaFileOrURL} is invalid.`, error as Error);
+        }
+
+        // NB: Here the given JSON schema is valid, but env values are not. 
+        const errors = (error as TEnvSchemaErrors).errors.map((error: TEnvSchemaErrors['errors'][number]) => {
             return new EnvSchemaCLIErrorVO(error);
         });
 
