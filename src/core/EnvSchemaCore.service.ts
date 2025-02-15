@@ -10,8 +10,9 @@ import EnvSchemaCLIErrorVO, { TEnvSchemaErrors } from '@src/core/EnvSchemaCLIErr
 
 type TSchema = {
     schemaFileOrURL: string | null;
-    value: Record<string, any> | null;
     isFileOrURL: boolean;
+    value: Record<string, any> | null;
+    isLoaded: boolean;
 };
 
 export default class EnvSchemaCoreService {
@@ -26,8 +27,9 @@ export default class EnvSchemaCoreService {
 
         this.#schema = {
             schemaFileOrURL: this.isString(schema) ? schema as string : null,
+            isFileOrURL: this.isString(schema),
             value: this.isObject(schema) ? schema as Record<string, any> : null,
-            isFileOrURL: this.isString(schema)
+            isLoaded: false
         };
 
         if (!this.isValidSchemaArgument()) {
@@ -44,8 +46,8 @@ export default class EnvSchemaCoreService {
     }
 
     public async run(): Promise<Record<string, any>> {
-        if (this.#schema.isFileOrURL) {
-            this.#schema.value = await this.provideSchemaOrThrow();
+        if (this.shouldLoadSchema()) {
+            this.#schema.value = await this.loadSchemaOrThrow();
         }
 
         try {
@@ -53,6 +55,10 @@ export default class EnvSchemaCoreService {
         } catch (_error) {
             throw this.prepareEnvSchemaErrorException(_error);
         }
+    }
+
+    private shouldLoadSchema(): boolean {
+        return this.#schema.isFileOrURL && !this.#schema.isLoaded;
     }
 
     /**
@@ -105,7 +111,7 @@ export default class EnvSchemaCoreService {
         return fullPath;
     }
 
-    private async provideSchemaOrThrow(): Promise<Record<string, any>> {
+    private async loadSchemaOrThrow(): Promise<Record<string, any>> {
         try {
             return await this.#definitionsRetrieveService.retrieve(this.#schema.schemaFileOrURL as string) as Record<string, any>;
         } catch (_error) {
