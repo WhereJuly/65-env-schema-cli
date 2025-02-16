@@ -1,12 +1,12 @@
-# `env-schema` CLI
+# `env-schema` Enhanced CLI
 
-The tiny CLI and programmatic wrapper for [`env-schema`](https://www.npmjs.com/package/env-schema) environment variables validator.
+The tiny enhanced CLI and programmatic wrapper around [`env-schema`](https://www.npmjs.com/package/env-schema) environment variables validator. Validates env files against [JSON Schema](https://json-schema.org/). On top, adds loading schema from file, URL, validation of multiple env files against the same schema.
 
-Its purpose is to be used as CLI in a separate build / CI step or being programmatically engaged in your build pipeline. It provides convenient one or multiple env files validation to ensure they all conform to the same [JSON Schema](https://json-schema.org/) schema you define.
+Its purpose is to be used as CLI in a separate build / CI step or being programmatically engaged in your custom build pipelines.
 
 **How it works**
 
-- Pass the package your env's JSON schema either as local JSON file or URL (or as object for programmatic usage).
+- Pass the package your env's JSON schema either as local JSON file or URL, or as object in programmatic usage.
 - Optionally provide one or multiple `.env` files to check vs the schema. Otherwise it defaults to `.env` at the your project root.
 - The file(s) either pass the check or the package errors when values mismatch with the JSON schema.
 
@@ -14,19 +14,17 @@ Its purpose is to be used as CLI in a separate build / CI step or being programm
 
 **Package Status**
 
+![Codecov](https://img.shields.io/codecov/c/github/WhereJuly/65-env-schema-cli?color=%2308A108)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
+
 ![npm bundle size](https://img.shields.io/bundlephobia/min/env-schema-cli)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/env-schema-cli)
 ![npm version](https://img.shields.io/npm/v/env-schema-cli?color=green)
 ![npm downloads](https://img.shields.io/npm/dm/env-schema-cli.svg?color=green)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?color=green)](https://opensource.org/licenses/MIT)
-
-![Codecov](https://img.shields.io/codecov/c/github/WhereJuly/65-env-schema-cli?color=%2308A108)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
 
 ---
 
@@ -41,6 +39,32 @@ Its purpose is to be used as CLI in a separate build / CI step or being programm
 ---
 
 ## Usage
+
+Install the package.
+
+```bash
+npm install --save-dev env-schema-cli
+```
+
+Validate `.env` at the project root.
+
+```bash
+npx env-schema-cli --schema src/config/env/env.schema.json
+```
+
+Validate multiple env files. Use subfolder where needed.
+
+```bash
+npx env-schema-cli --schema src/config/env/env.schema.json --env .env .env.example some/folder/.env.other
+```
+
+Provide your schema from URL
+
+```bash
+npx env-schema-cli --schema https://config.my-project.tld --env .env .env.example
+```
+
+The CLI provides informative output for success or failure for better scripts debug.
 
 ## Programmatic Usage
 
