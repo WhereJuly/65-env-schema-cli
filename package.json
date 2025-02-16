@@ -10,7 +10,7 @@
         "env-schema-cli": "./code/cli/cli.js"
     },
     "scripts": {
-        "test:foundation": "vitest run --config tests/foundation/.ancillary/config/vitest.config.ts",
+        "test:foundation": "npm run check-types && vitest run --config tests/foundation/.ancillary/config/vitest.config.ts",
         "check-types": "npx tsc --noEmit --project .",
         "lint": "npx eslint ./src && npx eslint ./.usage",
         "package:build": "tsx .delivery/scripts/build.ts",
