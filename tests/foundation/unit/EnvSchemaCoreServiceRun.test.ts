@@ -9,7 +9,7 @@ import EnvSchemaCoreService, { TRunReturns } from '@src/core/EnvSchemaCore.servi
 import fixtures from '@tests/foundation/.ancillary/fixtures/index.js';
 
 import EnvSchemaCLIException from '@src/exceptions/EnvSchemaCLI.exception.js';
-import EnvSchemaCLIErrorVO from '@src/core/EnvSchemaCLIError.valueobject.js';
+import EnvSchemaCLIErrorVO from '@src/exceptions/EnvSchemaCLIError.valueobject.js';
 
 const base = 'http://127.0.0.1:5000';
 const server = nock(base);

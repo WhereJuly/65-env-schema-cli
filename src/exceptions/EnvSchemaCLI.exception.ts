@@ -1,6 +1,6 @@
 'use strict';
 
-import EnvSchemaCLIErrorVO from '@src/core/EnvSchemaCLIError.valueobject.js';
+import EnvSchemaCLIErrorVO from '@src/exceptions/EnvSchemaCLIError.valueobject.js';
 
 /**
  * The application-specific exception.

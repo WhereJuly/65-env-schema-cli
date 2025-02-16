@@ -8,7 +8,7 @@ import { createRequire } from "module";
 
 import EnvSchemaCoreService from '@src/core/EnvSchemaCore.service.js';
 import EnvSchemaCLIException from '@src/exceptions/EnvSchemaCLI.exception.js';
-import EnvSchemaCLIErrorVO from '@src/core/EnvSchemaCLIError.valueobject.js';
+import EnvSchemaCLIErrorVO from '@src/exceptions/EnvSchemaCLIError.valueobject.js';
 
 const pkg = createRequire(import.meta.url)("../../package.json") as PackageJson;
 

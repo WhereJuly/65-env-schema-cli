@@ -6,7 +6,7 @@ import fs from 'fs';
 
 import EnvSchemaCLIException from '@src/exceptions/EnvSchemaCLI.exception.js';
 import OASJSONDefinitionsRetrieveService from '@src/shared/OASJSONDefinitionsRetrieve.service.js';
-import EnvSchemaCLIErrorVO, { TEnvSchemaErrors } from '@src/core/EnvSchemaCLIError.valueobject.js';
+import EnvSchemaCLIErrorVO, { TEnvSchemaErrors } from '@src/exceptions/EnvSchemaCLIError.valueobject.js';
 
 type TSchema = {
     schemaFileOrURL: string | null;
