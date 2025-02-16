@@ -107,7 +107,7 @@ await service.run('some/other/.env.file');
 await service.run(['.env', '.env.example', '.env.test', 'some/other/.env.file']);
 ```
 
-The `.run()` method returns [`TRunReturns[]`](src/core/EnvSchemaCore.service.ts) array of objects pr throws the exception.
+The `.run()` method returns [`TRunReturns[]`](src/core/EnvSchemaCore.service.ts) array of objects ior throws [the exception](#exceptions-handling).
 
 ### `.validate()`
 
