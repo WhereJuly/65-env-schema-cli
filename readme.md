@@ -100,11 +100,14 @@ The signature:
  */
 const results = await service.run();
 
-// Run the validation for the multiple env files.
+// Run the validation for a single custom env file 
+await _service.run('some/other/.env.file');
+
+// or for multiple env files.
 await _service.run(['.env', '.env.example', '.env.test', 'some/other/.env.file']);
 ```
 
-The `.run()` method returns [`TRunReturns[]`](src/core/EnvSchemaCore.service.ts) array of objects or throws the [`EnvSchemaCLIException`](src/exceptions/EnvSchemaCLI.exception.ts) that indicates invalid variables.
+The `.run()` method returns [`TRunReturns[]`](src/core/EnvSchemaCore.service.ts) array of objects or throws the [`EnvSchemaCLIException`](src/exceptions/EnvSchemaCLI.exception.ts) that indicates invalid variables in `errors` property typed `EnvSchemaCLIErrorVO[]`.
 
 ### `.validate()`
 

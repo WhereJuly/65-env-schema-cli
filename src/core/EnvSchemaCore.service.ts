@@ -118,12 +118,12 @@ export default class EnvSchemaCoreService {
      * @param {Record<string, any>} schema The schema to validate against.
      * 
      * @param {string} envFileFullPath The full path to the environment file being validated.
-     * @returns {Record<string, any>} The parsed and validated environment variables.
+     * @returns {Record<string, any>} The parsed and validated environment variables object.
      * @throws {EnvSchemaCLIException} If the environment variables do not conform to the schema.
      * 
      * IMPORTANT: Running `envSchema` throws if the env value is missing or does not match schema.
      * NB: If operated on `process.env` it seems to unset loaded variables if the validation fails
-     * (not the case with this service).
+     * (not the case with this service as it does not use `process.env`).
      */
     public validate(schema: Record<string, any>, envFileFullPath: string): Record<string, any> {
         /**

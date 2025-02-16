@@ -19,5 +19,7 @@ async function _single() {
 async function _many() {
     // Will validate multiple env files
     await _service.run(['.env', '.env.example', '.env.test', 'some/other/.env.file']);
+    
+    _service.validate({}, '.env');
 }
 
