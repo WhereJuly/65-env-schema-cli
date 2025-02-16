@@ -148,7 +148,7 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
             await expect(actual).rejects.toThrowError('network error');
         });
 
-        it('Should throw for valid URL returning not JSON schema', async () => {
+        it('Should throw for actual valid URL returning not a JSON schema', async () => {
             const url = 'https://jsonplaceholder.typicode.com/todos/1';
             const service = new EnvSchemaCoreService(url);
 
