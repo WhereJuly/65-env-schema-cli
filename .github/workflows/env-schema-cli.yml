@@ -66,7 +66,8 @@ jobs:
           PACKAGE_VERSION=$(jq -r .version package.json)
 
           # Create the tag
-          TAG="${PACKAGE_NAME}@${PACKAGE_VERSION}"
+          # TAG="${PACKAGE_NAME}@${PACKAGE_VERSION}" # Only for monorepos
+          TAG="${PACKAGE_VERSION}"
           git tag $TAG
 
           # Push the tag to the repository
