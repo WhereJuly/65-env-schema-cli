@@ -112,18 +112,6 @@ export default class EnvSchemaCoreService {
         return results as [TRunReturns, ...TRunReturns[]];
     }
 
-    private runSingle(envFile?: string): TRunReturns {
-        const envFileFullPath = this.constructFullFilePathOrThrow(envFile);
-
-        try {
-            const env = this.validate(this.#schema.value!, envFileFullPath);
-
-            return { envFileFullPath, env };
-        } catch (_error) {
-            throw this.prepareOrThrowEnvSchemaErrorException(_error, envFileFullPath);
-        }
-    }
-
     /**
      * Validates environment variables against the provided schema without modifying `process.env`.
      * 
@@ -156,6 +144,18 @@ export default class EnvSchemaCoreService {
         });
 
         return destinationEnvVariables;
+    }
+
+    private runSingle(envFile?: string): TRunReturns {
+        const envFileFullPath = this.constructFullFilePathOrThrow(envFile);
+
+        try {
+            const env = this.validate(this.#schema.value!, envFileFullPath);
+
+            return { envFileFullPath, env };
+        } catch (_error) {
+            throw this.prepareOrThrowEnvSchemaErrorException(_error, envFileFullPath);
+        }
     }
 
     private isString(maybeString: any): boolean {
