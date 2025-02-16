@@ -40,7 +40,7 @@ npm run test:usage
   - No release tagging for `develop` branch;
   - No test coverage publish;
 - Merge the release branch into `master`;
-  - Amend the merge commit message with `[markdown-merger] Release (package): vX.X.X`;
+  - Amend the merge commit message with `[package] Release: vX.X.X`;
   - Locally in `master` branch run `npm run package:build` and `npm run package:publish`.
   - Will test and build the package;
   - Push to remote.
