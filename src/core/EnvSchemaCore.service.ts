@@ -98,12 +98,22 @@ export default class EnvSchemaCoreService {
      * 
      * @throws {EnvSchemaCLIException} If the schema is invalid, the file does not exist, or validation fails.
      */
-    public async run(envFile?: string): Promise<TRunReturns> {
-        const envFileFullPath = this.constructFullFilePathOrThrow(envFile);
-
+    public async run(envFile?: string | string[]): Promise<[TRunReturns, ...TRunReturns[]]> {
         if (this.shouldLoadSchema()) {
             this.#schema.value = await this.loadSchemaOrThrow();
         }
+
+        const envFiles = Array.isArray(envFile) ? envFile : [envFile];
+
+        const results = envFiles.map((envFile_: string | undefined) => {
+            return this.runSingle(envFile_);
+        });
+
+        return results as [TRunReturns, ...TRunReturns[]];
+    }
+
+    private runSingle(envFile?: string): TRunReturns {
+        const envFileFullPath = this.constructFullFilePathOrThrow(envFile);
 
         try {
             const env = this.validate(this.#schema.value!, envFileFullPath);

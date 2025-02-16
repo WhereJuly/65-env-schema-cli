@@ -40,7 +40,7 @@ program
         for (let index = 0; index < envs.length; index++) {
             try {
                 const result = await service.run(envs[index]);
-                console.log(`[${chalk.green('INFO')}] The env variables in "${result.envFileFullPath}" conforms to schema in "${service.schema.schemaFileOrURL}".`);
+                console.log(`[${chalk.green('INFO')}] The env variables in "${result[0].envFileFullPath}" conforms to schema in "${service.schema.schemaFileOrURL}".`);
             } catch (_error) {
                 const error = _error as EnvSchemaCLIException;
                 console.log(`\n\r[${chalk.red('ERROR')}]: ${error.message}.`);

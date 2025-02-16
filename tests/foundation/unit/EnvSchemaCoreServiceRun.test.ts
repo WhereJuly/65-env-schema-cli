@@ -24,7 +24,7 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
             const expected = expected_('.env', { DUMMY: 'development' });
             const service = new EnvSchemaCoreService(fixtures.schemaDefaultJSON);
 
-            const actual = await service.run();
+            const actual = (await service.run())[0]!;
 
             expect(actual.envFileFullPath).toEqual(expect.stringContaining('.env'));
             expect(actual.env).toEqual(expected.env);
@@ -34,7 +34,7 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
             const expected = expected_(null, { DUMMY: 'development' });
             const service = new EnvSchemaCoreService(fixtures.schema_js);
 
-            const actual = await service.run();
+            const actual = (await service.run())[0];
 
             expect(actual.envFileFullPath).toEqual(expect.stringContaining('.env'));
             expect(actual.env).toEqual(expected.env);
@@ -44,7 +44,7 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
             const expected = expected_(fixtures.envFakeFile, { ENV: 'fake' });
             const service = new EnvSchemaCoreService(fixtures.schemaFakeJSON);
 
-            const actual = await service.run(fixtures.envFakeFile);
+            const actual = (await service.run(fixtures.envFakeFile))[0];
 
             expect(actual.envFileFullPath?.replaceAll('\\', '/')).toEqual(expect.stringContaining(fixtures.envFakeFile));
             expect(actual.env).toEqual(expected.env);
@@ -114,7 +114,7 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
         }
 
         it('Should throw for missing env file', async () => {
-            const service = new EnvSchemaCoreService(fixtures.schemaDefaultJS);
+            const service = new EnvSchemaCoreService(fixtures.schemaDefaultJSON);
 
             const actual = async () => { await service.run('missing-env-file'); };
 
@@ -158,6 +158,17 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
             await expect(actual).rejects.toThrowError(`The schema at "${url}" is invalid`);
         });
 
+    });
+
+    it('+run([]) #4: Should successfully validate multiple env files against the same schema', async () => {
+        const expected = expected_('.env', { DUMMY: 'development' });
+        const service = new EnvSchemaCoreService(fixtures.schemaDefaultJSON);
+
+        const actual = await service.run(['.env', '.env.valid']);
+
+        expect(actual).toHaveLength(2);
+        expect(actual[0].envFileFullPath).toEqual(expect.stringContaining('.env'));
+        expect(actual[0].env).toEqual(expected.env);
     });
 
 });
