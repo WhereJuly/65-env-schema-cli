@@ -4,9 +4,9 @@ on:
   push:
     branches:
       # - never # Skip the workflow for debugging purposes;
-      - implement/package-ci # NB: For debugging only
-      # - develop
-      # - master
+      # - implement/package-ci # NB: For debugging only
+      - develop
+      - master
     paths:
       - ".github/workflows/env-schema-cli.yml"
       - "/*"
