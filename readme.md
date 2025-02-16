@@ -100,14 +100,14 @@ The signature:
  */
 const results = await service.run();
 
-// Run the validation for a single custom env file 
+// Run the validation for a single custom env file
 await service.run('some/other/.env.file');
 
 // or for multiple env files.
 await service.run(['.env', '.env.example', '.env.test', 'some/other/.env.file']);
 ```
 
-The `.run()` method returns [`TRunReturns[]`](src/core/EnvSchemaCore.service.ts) array of objects or throws the [`EnvSchemaCLIException`](src/exceptions/EnvSchemaCLI.exception.ts) that indicates invalid variables in `errors` property typed [`EnvSchemaCLIErrorVO[]`](src/exceptions/EnvSchemaCLIError.valueobject.ts).
+The `.run()` method returns [`TRunReturns[]`](src/core/EnvSchemaCore.service.ts) array of objects pr throws the exception.
 
 ### `.validate()`
 
@@ -119,7 +119,9 @@ Generally, it is not assumed for sole use; nevertheless, it may be useful occasi
 
 ### Exceptions Handling
 
-The service may throw `EnvSchemaCLIException`. The exception includes the original error message where appropriate. The env fields errors are accumulated in the `EnvSchemaCLIException.errors` property typed `EnvSchemaCLIErrorVO[]`
+The service throws `EnvSchemaCLIException`. The exception includes the original error message where appropriate. The env fields errors are accumulated in the `EnvSchemaCLIException.errors` property typed `EnvSchemaCLIErrorVO[]`
+
+The service throws the [`EnvSchemaCLIException`](src/exceptions/EnvSchemaCLI.exception.ts). The exception includes the original error message where appropriate. The env fields errors, if any, are accumulated in the `EnvSchemaCLIException.errors` property typed [`EnvSchemaCLIErrorVO[]`](src/exceptions/EnvSchemaCLIError.valueobject.ts).
 
 ## Maintenance
 
