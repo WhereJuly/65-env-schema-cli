@@ -31,7 +31,7 @@ npm run test:usage
 [used just as a reference] The release workflow on the monorepo.
 
 - Merge finished feature branch to `develop` branch.
-- Branch out from `develop` to `release/markdown-merger/vX.X.X` branch (keep the name standard as it triggers the CI).
+- Branch out from `develop` to `release/vX.X.X` branch (keep the name standard as it triggers the CI).
   - Prepare the release: bump up version; later, when released, push tag and create release notes on Github;
   - Run `npm run package:build` to check the version builds fine;
 - Merge the release branch back to `develop`; Push to remote.
@@ -44,11 +44,9 @@ npm run test:usage
   - Locally in `master` branch run `npm run package:build` and `npm run package:publish`.
   - Will test and build the package;
   - Push to remote.
-  - Pushes the [subtree](#manage-public-version-with-git-subtree) to the remote dedicated public repository;
   - The push to master will trigger the CI; Check its success;
-  - The CI must create and push the `oas-markdown-merger@vX.X.X` tag to the monorepo;
+  - The CI must create and push the `env-schema-cli@vX.X.X` tag to the monorepo;
   - The CI must publish test coverage;
-  - Manually push `oas-markdown-merger@vX.X.X` tag to the public split repository;
 
 ## Manage Public Version with Git Subtree
 
