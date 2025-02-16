@@ -1,4 +1,4 @@
-name: OAS Markdown Merger test, coverage
+name: env-schema CLI test, coverage
 
 on:
   push:
@@ -58,8 +58,8 @@ jobs:
       # Take the package name and version from package.json
       - name: Create and push tag on master branch only
         # NB: For debugging
-        if: github.ref_name == 'implement/package-ci'
-        # if: github.ref_name == 'master'
+        # if: github.ref_name == 'implement/package-ci'
+        if: github.ref_name == 'master'
         run: |
           # Extract package name and version from package.json
           PACKAGE_NAME=$(jq -r .name package.json)
@@ -77,8 +77,8 @@ jobs:
 
       - name: Upload coverage reports to Codecov
         # NB: For debugging
-        if: github.ref_name == 'implement/package-ci'
-        # if: github.ref_name == 'master'
+        # if: github.ref_name == 'implement/package-ci'
+        if: github.ref_name == 'master'
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
