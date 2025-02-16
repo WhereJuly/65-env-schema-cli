@@ -72,7 +72,7 @@ The CLI provides informative output for success or failure for better scripts de
 
 ## Programmatic Usage
 
-For programmatic usage the thorough documentation is available in the JSDoc block, hover-able at your IDE (e.g. VSCode).
+For programmatic usage the thorough documentation is available in the JSDoc block, hover-able with your IDE (e.g. VSCode).
 
 Note that the package isolates operations from any actual `process.env` and does not modify it. All envs - incoming and outgoing are kept in the internal objects.
 
@@ -107,7 +107,7 @@ await service.run('some/other/.env.file');
 await service.run(['.env', '.env.example', '.env.test', 'some/other/.env.file']);
 ```
 
-The `.run()` method returns [`TRunReturns[]`](src/core/EnvSchemaCore.service.ts) array of objects or throws the [`EnvSchemaCLIException`](src/exceptions/EnvSchemaCLI.exception.ts) that indicates invalid variables in `errors` property typed `EnvSchemaCLIErrorVO[]`.
+The `.run()` method returns [`TRunReturns[]`](src/core/EnvSchemaCore.service.ts) array of objects or throws the [`EnvSchemaCLIException`](src/exceptions/EnvSchemaCLI.exception.ts) that indicates invalid variables in `errors` property typed [`EnvSchemaCLIErrorVO[]`](src/exceptions/EnvSchemaCLIError.valueobject.ts).
 
 ### `.validate()`
 
