@@ -72,7 +72,7 @@ The CLI provides informative output for success or failure for better scripts de
 
 ## Programmatic Usage
 
-For programmatic usage the thorough documentation is available in the JSDoc block, hover-able with your IDE (e.g. VSCode).
+For programmatic usage the thorough documentation is available in the JSDoc blocks hover-able with your IDE (e.g. VSCode).
 
 Note that the package isolates operations from any actual `process.env` and does not modify it. All envs - incoming and outgoing are kept in the internal objects.
 
