@@ -33,5 +33,5 @@
         "./tests/foundation/integration/.external/**/*.ts",
         "./tests/foundation/.ancillary/**/*.*"
     ],
-    "exclude": ["node_modules", ".usage"]
+    "exclude": ["node_modules"]
 }
