@@ -1,6 +1,6 @@
 # Enhanced `env-schema` CLI
 
-The tiny enhanced CLI and programmatic wrapper around [`env-schema`](https://www.npmjs.com/package/env-schema) validates environment variables against [JSON Schema](https://json-schema.org/). This package adds support for loading schemas from a file or URL and validating multiple environment files against the same schema.
+The tiny enhanced CLI and programmatic wrapper around <code><a href="https://www.npmjs.com/package/env-schema" target="_blank" rel="noopener noreferrer">env-schema</a></code> validates environment variables against <a href="https://json-schema.org/" target="_blank" rel="noopener noreferrer">JSON Schema</a>. This package adds support for loading schemas from a file or URL and validating multiple environment files against the same schema.
 
 Its purpose is to be used as a CLI in a separate build/CI step or to be programmatically integrated into custom build pipelines.
 
