@@ -65,7 +65,7 @@ npx env-schema-cli --schema src/config/env/env.schema.json --env .env .env.examp
 Provide your schema from URL
 
 ```bash
-npx env-schema-cli --schema https://config.my-project.tld --env .env .env.example
+npx env-schema-cli --schema https://config.my-project.tld/config/app.schema.json --env .env .env.example
 ```
 
 The CLI provides informative output for success or failure for better scripts debug.
@@ -101,10 +101,10 @@ The signature:
 const results = await service.run();
 
 // Run the validation for a single custom env file 
-await _service.run('some/other/.env.file');
+await service.run('some/other/.env.file');
 
 // or for multiple env files.
-await _service.run(['.env', '.env.example', '.env.test', 'some/other/.env.file']);
+await service.run(['.env', '.env.example', '.env.test', 'some/other/.env.file']);
 ```
 
 The `.run()` method returns [`TRunReturns[]`](src/core/EnvSchemaCore.service.ts) array of objects or throws the [`EnvSchemaCLIException`](src/exceptions/EnvSchemaCLI.exception.ts) that indicates invalid variables in `errors` property typed `EnvSchemaCLIErrorVO[]`.
