@@ -1,6 +1,6 @@
 {
     "name": "env-schema-cli",
-    "version": "0.9.3",
+    "version": "0.9.4",
     "description": "The enhanced CLI and a programmatic wrapper around env-schema environment variables validator against JSON Schema.",
     "type": "module",
     "main": "./code/index.js",
