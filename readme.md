@@ -15,6 +15,7 @@ Its purpose is to be used as a CLI in a separate build/CI step or to be programm
 **Package Status**
 
 ![Codecov](https://img.shields.io/codecov/c/github/WhereJuly/65-env-schema-cli?color=%2308A108)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
