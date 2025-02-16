@@ -1,6 +1,6 @@
 {
     "name": "@wherejuly/env-schema-cli",
-    "version": "0.2.0",
+    "version": "0.2.4",
     "description": "The CLI and a programmatic wrapper for [env-schema](https://www.npmjs.com/package/env-schema) environment variables validator.",
     "type": "module",
     "main": "./code/index.js",
@@ -18,7 +18,7 @@
         "package:bundle:copy": "cpy ./package.json ./LICENSE ./readme.md ./.delivery/.builds/dist",
         "package:pack": "cd ./.delivery/.builds/dist && npm pack",
         "package:test:usage": "cd .usage && npm run test:usage",
-        "package:lint:readme": "npx markdown-link-check --progress --quiet ./readme.md ./.docs",
+        "package:lint:readme": "npx markdown-link-check --progress --quiet ./readme.md",
         "package:publish": "npm publish ./.delivery/.builds/dist"
     },
     "keywords": [
@@ -45,6 +45,7 @@
         "@vitest/coverage-v8": "^2.1.9",
         "cpy-cli": "^5.0.0",
         "eslint": "^9.20.1",
+        "markdown-link-check": "^3.13.6",
         "mockttp": "^3.15.5",
         "nock": "^14.0.1",
         "rimraf": "^6.0.1",

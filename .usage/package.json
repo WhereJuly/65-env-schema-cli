@@ -12,6 +12,6 @@
     },
     "license": "UNLICENSED",
     "dependencies": {
-        "oas-markdown-merger": "file:../.delivery/.builds/dist"
+        "@wherejuly/env-schema-cli": "file:../.delivery/.builds/dist"
     }
 }
