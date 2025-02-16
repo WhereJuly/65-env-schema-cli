@@ -8,15 +8,54 @@ import EnvSchemaCLIException from '@src/exceptions/EnvSchemaCLI.exception.js';
 import OASJSONDefinitionsRetrieveService from '@src/shared/OASJSONDefinitionsRetrieve.service.js';
 import EnvSchemaCLIErrorVO, { TEnvSchemaErrors } from '@src/exceptions/EnvSchemaCLIError.valueobject.js';
 
-type TSchema = {
+/**
+ * Represents the schema configuration used by `EnvSchemaCoreService`.
+ * This type defines the structure for managing schema data, which can be either
+ * a file, a URL or a JS object.
+ * 
+ * It tracks whether the schema is loaded and its current value.
+ * 
+ * @property {string | null} schemaFileOrURL The path or URL to the schema file. Null if the schema is provided as an object.
+ * @property {boolean} isFileOrURL Indicates whether the schema is sourced from a file/URL (`true`) or provided as an object (`false`).
+ * @property {Record<string, any> | null} value The loaded or provided schema object. Null if the schema is not yet loaded.
+ * @property {boolean} isLoaded Indicates whether the schema has been successfully loaded.
+ * 
+ * @see {@link EnvSchemaCoreService#schema} The getter that provides access to the current 
+ * schema configuration.
+ */
+export type TSchema = {
     schemaFileOrURL: string | null;
     isFileOrURL: boolean;
     value: Record<string, any> | null;
     isLoaded: boolean;
 };
 
+/**
+ * Represents the result of running the schema validation process.
+ * 
+ * @property {string | null} envFileFullPath - The full path to the environment file that was validated. 
+ * Null if no file was provided.
+ * @property {Record<string, any>} env - The parsed and validated environment variables.
+ */
 export type TRunReturns = { envFileFullPath: string | null; env: Record<string, any>; };
 
+/**
+ * Core service for validating environment variables against a JSON schema.
+ * This class handles loading schema files or URLs, validating environment files against the schema,
+ * and managing schema-related errors. It supports both file-based and object-based schemas.
+ * 
+ * The service does not impact the `process.env` in any way. 
+ * All env operations are internally isolated.
+ * 
+ * @param {string | Record<string, any>} schema - The schema to validate against. 
+ * Can be a file path, URL, or a schema object.
+ * 
+ * @throws {EnvSchemaCLIException} If the schema argument is invalid (not a string or object).
+ * 
+ * @property {TSchema} schema The getter returning {@link TSchema}.
+ * @method run Runs the validation process.
+ * @method validate Validates a given schema against environment.
+ */
 export default class EnvSchemaCoreService {
 
     readonly #schema: TSchema;
@@ -40,12 +79,24 @@ export default class EnvSchemaCoreService {
         this.#definitionsRetrieveService = new OASJSONDefinitionsRetrieveService();
     }
 
+    /**
+     * Provides access to the current schema configuration.
+     * 
+     * @returns {TSchema} The schema configuration.
+     */
     public get schema(): TSchema {
         return this.#schema;
     }
 
     /**
-     * There can be multiple files validated against the same schema.
+     * Manges the validation process. Loads the schema on demand and runs validation.
+     * 
+     * @param {string} [envFile] - The path to the environment file. 
+     * Defaults to `.env` in the current working directory.
+     * 
+     * @returns {Promise<TRunReturns>} See {@link TRunReturns}.
+     * 
+     * @throws {EnvSchemaCLIException} If the schema is invalid, the file does not exist, or validation fails.
      */
     public async run(envFile?: string): Promise<TRunReturns> {
         const envFileFullPath = this.constructFullFilePathOrThrow(envFile);
@@ -59,13 +110,22 @@ export default class EnvSchemaCoreService {
 
             return { envFileFullPath, env };
         } catch (_error) {
-            throw this.prepareEnvSchemaErrorException(_error, envFileFullPath);
+            throw this.prepareOrThrowEnvSchemaErrorException(_error, envFileFullPath);
         }
     }
 
     /**
+     * Validates environment variables against the provided schema without modifying `process.env`.
+     * 
+     * @param {Record<string, any>} schema The schema to validate against.
+     * 
+     * @param {string} envFileFullPath The full path to the environment file being validated.
+     * @returns {Record<string, any>} The parsed and validated environment variables.
+     * @throws {EnvSchemaCLIException} If the environment variables do not conform to the schema.
+     * 
      * IMPORTANT: Running `envSchema` throws if the env value is missing or does not match schema.
-     * If operated on `process.env` it seems to unset loaded variables if the validation fails.
+     * NB: If operated on `process.env` it seems to unset loaded variables if the validation fails
+     * (not the case with this service).
      */
     public validate(schema: Record<string, any>, envFileFullPath: string): Record<string, any> {
         /**
@@ -127,7 +187,18 @@ export default class EnvSchemaCoreService {
         }
     }
 
-    private prepareEnvSchemaErrorException(error_: unknown, envFileFullPath: string): EnvSchemaCLIException {
+    /**
+     * Either throws or returns a custom `EnvSchemaCLIException` based on the validation error.
+     * Handles both invalid JSON schema errors and environment value validation errors.
+     * 
+     * @param {unknown} error_ The error caught during environment variables validation.
+     * @param {string} envFileFullPath The full path to the environment file being validated.
+     * 
+     * @throws {EnvSchemaCLIException} If schema is not a JSON schema.
+     * 
+     * @returns {EnvSchemaCLIException} In case of env validation errors.
+     */
+    private prepareOrThrowEnvSchemaErrorException(error_: unknown, envFileFullPath: string): EnvSchemaCLIException {
         const error = error_ as TEnvSchemaErrors | Error;
 
         // NB: This is the invalid JSON schema error
