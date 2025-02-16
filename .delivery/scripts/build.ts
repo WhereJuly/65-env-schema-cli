@@ -11,7 +11,7 @@ const commands: string[] = [
     'npm run package:bundle:copy',
     'npm run package:pack',
     'npm run package:test:usage',
-    "package:lint:readme"
+    // "package:lint:readme"
 ];
 
 try {

@@ -1,14 +1,14 @@
-# `env-schema` Enhanced CLI
+# Enhanced `env-schema` CLI
 
-The tiny enhanced CLI and programmatic wrapper around [`env-schema`](https://www.npmjs.com/package/env-schema) environment variables validator. Validates env files against [JSON Schema](https://json-schema.org/). On top, adds loading schema from file, URL, validation of multiple env files against the same schema.
+The tiny enhanced CLI and programmatic wrapper around [`env-schema`](https://www.npmjs.com/package/env-schema) validates environment variables against [JSON Schema](https://json-schema.org/). This package adds support for loading schemas from a file or URL and validating multiple environment files against the same schema.
 
-Its purpose is to be used as CLI in a separate build / CI step or being programmatically engaged in your custom build pipelines.
+Its purpose is to be used as a CLI in a separate build/CI step or to be programmatically integrated into custom build pipelines.
 
 **How it works**
 
-- Pass the package your env's JSON schema either as local JSON file or URL, or as object in programmatic usage.
-- Optionally provide one or multiple `.env` files to check vs the schema. Otherwise it defaults to `.env` at the your project root.
-- The file(s) either pass the check or the package errors when values mismatch with the JSON schema.
+- Pass the package your env's JSON schema as a local JSON file, a URL, or an object in programmatic usage.
+- Optionally, provide one or multiple `.env` files to check against the schema. Otherwise, it defaults to `.env` at your project root.
+- The file(s) either pass the check, or the package returns an error when values mismatch the JSON schema.
 
 ---
 
@@ -32,6 +32,10 @@ Its purpose is to be used as CLI in a separate build / CI step or being programm
 
 - [Usage](#usage)
 - [Programmatic Usage](#programmatic-usage)
+  - [The Core Service](#the-core-service)
+  - [`.run()`](#run)
+  - [`.validate()`](#validate)
+  - [Exceptions Handling](#exceptions-handling)
 - [Maintenance](#maintenance)
   - [Contributions](#contributions)
   - [License](#license)
@@ -61,16 +65,61 @@ npx env-schema-cli --schema src/config/env/env.schema.json --env .env .env.examp
 Provide your schema from URL
 
 ```bash
-npx env-schema-cli --schema https://config.my-project.tld --env .env .env.example
+npx env-schema-cli --schema https://config.my-project.tld/config/app.schema.json --env .env .env.example
 ```
 
 The CLI provides informative output for success or failure for better scripts debug.
 
 ## Programmatic Usage
 
+For programmatic usage the thorough documentation is available in the JSDoc blocks hover-able with your IDE (e.g. VSCode).
+
 Note that the package isolates operations from any actual `process.env` and does not modify it. All envs - incoming and outgoing are kept in the internal objects.
 
-The `.run(envFile: string)` method returns [`TRunReturns`](src/core/EnvSchemaCore.service.ts) object or throws the exception that indicates invalid variables.
+### The Core Service
+
+```typescript
+/**
+ * First, create the service using the desired schema.
+ * Use schemas from subfolders or URL as needed.
+ */
+const service = new EnvSchemaCoreService('my-app.schema.json');
+```
+
+### `.run()`
+
+The signature:
+
+`public async run(envFile?: string | string[]): Promise<[TRunReturns, ...TRunReturns[]]>`
+
+```typescript
+/**
+ * Now validate the single `.env` file at project root (at `process.cwd()`)
+ * The `results` type is `TReturnResult[]` array of objects with env file path and
+ * valid env values just for the case.
+ */
+const results = await service.run();
+
+// Run the validation for a single custom env file
+await service.run('some/other/.env.file');
+
+// or for multiple env files.
+await service.run(['.env', '.env.example', '.env.test', 'some/other/.env.file']);
+```
+
+The `.run()` method returns [`TRunReturns[]`](src/core/EnvSchemaCore.service.ts) array of objects ior throws [the exception](#exceptions-handling).
+
+### `.validate()`
+
+The signature:
+
+`public validate(schema: Record<string, any>, envFileFullPath: string): Record<string, any>`
+
+Generally, it is not assumed for sole use; nevertheless, it may be useful occasionally. See the JSDoc for more info.
+
+### Exceptions Handling
+
+The service throws the [`EnvSchemaCLIException`](src/exceptions/EnvSchemaCLI.exception.ts). The exception includes the original error message where appropriate. The env fields errors, if any, are accumulated in the `EnvSchemaCLIException.errors` property typed [`EnvSchemaCLIErrorVO[]`](src/exceptions/EnvSchemaCLIError.valueobject.ts).
 
 ## Maintenance
 
