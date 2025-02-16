@@ -1,6 +1,6 @@
 {
-    "name": "@wherejuly/env-schema-cli",
-    "version": "0.8.1",
+    "name": "env-schema-cli",
+    "version": "0.8.2",
     "description": "The the enhanced CLI and a programmatic wrapper around [env-schema](https://www.npmjs.com/package/env-schema) environment variables validator against [JSON Schema](https://json-schema.org/).",
     "type": "module",
     "main": "./code/index.js",
