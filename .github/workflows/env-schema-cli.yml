@@ -1,0 +1,80 @@
+name: OAS Markdown Merger test, coverage
+
+on:
+  push:
+    branches:
+      # - never # Skip the workflow for debugging purposes;
+      - implement/package-ci # NB: For debugging only
+      # - develop
+      # - master
+    paths:
+      - ".github/workflows/env-schema-cli.yml"
+      - "src/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    env:
+      GITHUB_AUTH_TOKEN: ${{ secrets.GH_AUTH_TOKEN }} # NB: Cannot use 'GITHUB_' prefix
+
+    name: Test, publish coverage
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      #  Install dependencies and build the package to test in .usage folder
+      - name: Install dependencies and build the package
+        run: |
+          npm install
+          npm run package:build
+
+      - name: Testing the latest build at usage .usage subfolder
+        working-directory: ./.usage
+        run: |
+          npm install
+          npm run test:usage
+
+      - name: Run tests and collect coverage
+        # NB: See https://app.codecov.io/gh/WhereJuly/60-1-oas-markdown-merger/tests/new
+        # NB: See https://app.codecov.io/gh/WhereJuly/60-1-oas-markdown-merger/new
+        run: npm run test:foundation -- --coverage
+
+      # - name: Debug - show the ref names
+      #   run: |
+      #     echo ref ${{ github.ref }}
+      #     echo ref name ${{ github.ref_name }}
+
+      # I need this step only run for the paths mentioned above AND for only `master` branch;`
+      # create and push the `<package-name>@v<package-version>` tag to the monorepo
+      # Take the package name and version from package.json
+      - name: Create and push tag on master branch only
+        # NB: For debugging
+        if: github.ref_name == 'implement/package-ci'
+        # if: github.ref_name == 'master'
+        run: |
+          # Extract package name and version from package.json
+          PACKAGE_NAME=$(jq -r .name package.json)
+          PACKAGE_VERSION=$(jq -r .version package.json)
+
+          # Create the tag
+          TAG="${PACKAGE_NAME}@${PACKAGE_VERSION}"
+          git tag $TAG
+
+          # Push the tag to the repository
+          git push origin $TAG
+
+      # - name: Push the package subtree to a dedicated repo
+      # NB: See the code for this step in https://lean-web-enterprise.atlassian.net/browse/DCPLDOAS-68
+
+      - name: Upload coverage reports to Codecov
+        if: github.ref_name == 'master'
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: WhereJuly/60-1-oas-markdown-merger
