@@ -20,6 +20,6 @@
         "noUncheckedIndexedAccess": true /* Add 'undefined' to a type when accessed using an index. */,
         "skipLibCheck": true
     },
-    "include": ["./tests"],
+    "include": ["./tests", "examples.ts"],
     "exclude": ["node_modules"]
 }

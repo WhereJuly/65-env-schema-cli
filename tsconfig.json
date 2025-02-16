@@ -27,11 +27,11 @@
     "include": [
         "./src",
         "eslint.config.mjs",
-        "./.usage/**/*.ts",
+        "./.usage/tests/**/*.ts",
         ".delivery/scripts",
         "./tests/foundation/**/*.ts",
         "./tests/foundation/integration/.external/**/*.ts",
         "./tests/foundation/.ancillary/**/*.*"
     ],
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", ".usage/examples.ts"]
 }
