@@ -9,7 +9,7 @@ on:
       - master
     paths:
       - ".github/workflows/env-schema-cli.yml"
-      - "/*"
+      - "/*.*"
       - "src/**"
 
 jobs:
