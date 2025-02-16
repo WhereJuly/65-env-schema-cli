@@ -76,8 +76,10 @@ jobs:
       # NB: See the code for this step in https://lean-web-enterprise.atlassian.net/browse/DCPLDOAS-68
 
       - name: Upload coverage reports to Codecov
-        if: github.ref_name == 'master'
+        # NB: For debugging
+        if: github.ref_name == 'implement/package-ci'
+        # if: github.ref_name == 'master'
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: WhereJuly/60-1-oas-markdown-merger
+          slug: WhereJuly/65-env-schema-cli
