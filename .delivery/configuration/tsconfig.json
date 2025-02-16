@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "target": "es2022", // Compile to ES2020 JavaScript (modern browsers)
+        "module": "NodeNext", // Use ES2020 modules (import/export)
+        "moduleResolution": "NodeNext", // Resolve modules in a way that supports ESM and modern resolution strategies
+        "strict": true, // Enable strict type-checking options
+        "esModuleInterop": true, // Enable interoperability between CommonJS and ES modules
+        "skipLibCheck": true, // Skip type checking of declaration files for faster builds
+        "forceConsistentCasingInFileNames": true, // Ensure consistent casing in file names
+        "baseUrl": "../../",
+        "rootDir": "../../src",
+        "paths": {
+            "@src/*": ["./src/*"]
+        },
+        "resolveJsonModule": true,
+        "outDir": "../.builds/dist/code",
+        "declarationDir": "../.builds/dist/types",
+        "declaration": true, // Generate `.d.ts` declaration files
+        "declarationMap": true, // Generate map files for declarations
+        "sourceMap": true, // Generate source maps
+        "lib": ["es2022"], // Include ES2020 features (e.g., BigInt, Nullish Coalescing)
+        "skipDefaultLibCheck": true // Skip checking default lib files (faster builds)
+    },
+    "include": [
+        "../../src/**/*.ts" // Include all TypeScript files in the "src" directory
+    ],
+    "exclude": [
+        "node_modules" // Exclude node_modules directory
+    ]
+}
