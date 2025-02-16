@@ -112,7 +112,7 @@ The signature:
 
 `public validate(schema: Record<string, any>, envFileFullPath: string): Record<string, any>`
 
-Generally is not assumed for sole use, nevertheless may be useful occasionally. See the JSDoc for more info.
+Generally, it is not assumed for sole use; nevertheless, it may be useful occasionally. See the JSDoc for more info.
 
 ### Exceptions Handling
 
