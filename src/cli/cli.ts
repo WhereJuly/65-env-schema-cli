@@ -37,9 +37,9 @@ program
 
         const service = new EnvSchemaCoreService(options.schema);
 
-        for (let index = 0; index < envs.length; index++) {
+        for (const env of envs) {
             try {
-                const result = await service.run(envs[index]);
+                const result = await service.run(env);
                 console.log(`[${chalk.green('INFO')}] The env variables in "${result[0].envFileFullPath}" conforms to schema in "${service.schema.schemaFileOrURL}".`);
             } catch (_error) {
                 const error = _error as EnvSchemaCLIException;

@@ -24,7 +24,7 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
             const expected = expected_('.env', { DUMMY: 'development' });
             const service = new EnvSchemaCoreService(fixtures.schemaDefaultJSON);
 
-            const actual = (await service.run())[0]!;
+            const actual = (await service.run())[0];
 
             expect(actual.envFileFullPath).toEqual(expect.stringContaining('.env'));
             expect(actual.env).toEqual(expected.env);
@@ -55,7 +55,6 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
 
             try {
                 const _env = await service.run(fixtures.envFakeFile);
-                // console.dir(env);
 
                 throw new Error('The test was expected to throw but it did not.');
 
