@@ -32,6 +32,8 @@ jobs:
       - name: Install dependencies and build the package
         run: |
           npm install
+          cd .usage && npm install
+          cd ../
           npm run package:build
 
       - name: Testing the latest build at usage .usage subfolder
