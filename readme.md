@@ -30,7 +30,7 @@ Its purpose is to be used as CLI in a separate build / CI step or being programm
 
 ---
 
-Contents
+**Contents**
 
 - [Usage](#usage)
 - [Programmatic Usage](#programmatic-usage)
@@ -44,7 +44,7 @@ Contents
 
 ## Programmatic Usage
 
-Note the package isolates operations from any actual `process.env` and it does not change the latter. It reads the source env file(s) variables into and write the destination env variables out to internal objects and operates on them.
+Note that the package isolates operations from any actual `process.env` and does not modify it. All envs - incoming and outgoing are kept in the internal objects.
 
 The `.run(envFile: string)` method returns [`TRunReturns`](src/core/EnvSchemaCore.service.ts) object or throws the exception that indicates invalid variables.
 
