@@ -118,7 +118,7 @@ Generally, it is not assumed for sole use; nevertheless, it may be useful occasi
 
 ### Exceptions Handling
 
-The service throws the [`EnvSchemaCLIException`](src/exceptions/EnvSchemaCLI.exception.ts). The exception includes the original error message where appropriate. The env fields errors, if any, are accumulated in the `EnvSchemaCLIException.errors` property typed [`EnvSchemaCLIErrorVO[]`](src/exceptions/EnvSchemaCLIError.valueobject.ts).
+The service throws the [`EnvSchemaCLIException`](src/exceptions/EnvSchemaCLI.exception.ts). The exception includes the original error message where appropriate. The env variables errors, if any, are accumulated in the `EnvSchemaCLIException.errors` property typed [`EnvSchemaCLIErrorVO[]`](src/exceptions/EnvSchemaCLIError.valueobject.ts).
 
 ## Maintenance
 
