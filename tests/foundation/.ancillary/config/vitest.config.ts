@@ -47,7 +47,7 @@ export default defineConfig({
             clean: true,
             include: ['src/**/*.{ts,tsx}'],
             exclude: ['**/*.d.ts', '**/*.types.ts', '**/types.ts', 'src/{shared,cli,index.ts}'],
-            reportsDirectory: fileURLToPath(new URL(`${root}/tests/foundation/.coverage`)),
+            reportsDirectory: fileURLToPath(new URL(`${root}/tests/foundation/.ancillary/.coverage`)),
             thresholds: {
                 lines: 90
             }
