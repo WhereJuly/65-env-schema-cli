@@ -55,7 +55,7 @@ function showEnvErrors(error: EnvSchemaCLIException) {
 
     console.log('\nThe following errors were encountered:');
     error.errors?.forEach((error: EnvSchemaCLIErrorVO) => {
-        console.log(` - ${error.message}`);
+        console.log(` - ${error.variable}: ${error.message} (${error.details})`);
     });
 }
 

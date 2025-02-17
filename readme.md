@@ -21,8 +21,6 @@ Its purpose is to be used as a CLI in a separate build/CI step or to be programm
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=WhereJuly_65-env-schema-cli&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=WhereJuly_65-env-schema-cli)
 
-![npm bundle size](https://img.shields.io/bundlephobia/min/env-schema-cli)
-![npm bundle size](https://img.shields.io/bundlephobia/minzip/env-schema-cli)
 ![npm version](https://img.shields.io/npm/v/env-schema-cli?color=green)
 ![npm downloads](https://img.shields.io/npm/dm/env-schema-cli.svg?color=green)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?color=green)](https://opensource.org/licenses/MIT)
@@ -120,7 +118,7 @@ Generally, it is not assumed for sole use; nevertheless, it may be useful occasi
 
 ### Exceptions Handling
 
-The service throws the [`EnvSchemaCLIException`](src/exceptions/EnvSchemaCLI.exception.ts). The exception includes the original error message where appropriate. The env fields errors, if any, are accumulated in the `EnvSchemaCLIException.errors` property typed [`EnvSchemaCLIErrorVO[]`](src/exceptions/EnvSchemaCLIError.valueobject.ts).
+The service throws the [`EnvSchemaCLIException`](src/exceptions/EnvSchemaCLI.exception.ts). The exception includes the original error message where appropriate. The env variables errors, if any, are accumulated in the `EnvSchemaCLIException.errors` property typed [`EnvSchemaCLIErrorVO[]`](src/exceptions/EnvSchemaCLIError.valueobject.ts).
 
 ## Maintenance
 

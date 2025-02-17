@@ -4,7 +4,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 
 import fixtures from '@tests/foundation/.ancillary/fixtures/index.js';
-import { execAsync } from '@tests/foundation/.ancillary/fixtures/helpers/helpers.js';
+import { execAsync } from '@tests/foundation/.ancillary/bootstrap/helpers/helpers.js';
 
 import { getLocal } from 'mockttp';
 import { execSync } from 'child_process';
