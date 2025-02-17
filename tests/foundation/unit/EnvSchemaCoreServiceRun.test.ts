@@ -159,7 +159,7 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
 
     });
 
-    it('+run([]) #4: Should successfully validate multiple env files against the same schema', async () => {
+    it('+run([...]) #4: Should successfully validate multiple env files against the same schema', async () => {
         const expected = expected_('.env', { DUMMY: 'development' });
         const service = new EnvSchemaCoreService(fixtures.schemaDefaultJSON);
 
@@ -168,6 +168,22 @@ describe('[unit] EnvSchemaCoreServiceRunTest', () => {
         expect(actual).toHaveLength(2);
         expect(actual[0].envFileFullPath).toEqual(expect.stringContaining('.env'));
         expect(actual[0].env).toEqual(expected.env);
+    });
+
+    it('+run() #5: Should throw exception with expected env errors', async () => {
+        const service = new EnvSchemaCoreService(fixtures.complex_json_schema);
+
+        try {
+            const actual = await service.run(fixtures.envComplexFile);
+            console.dir(actual);
+        } catch (_error) {
+            const actual = _error as EnvSchemaCLIException;
+
+            expect(actual).toBeInstanceOf(EnvSchemaCLIException);
+            expect(actual.errors).toHaveLength(3);
+            expect(actual.errors![0]).toBeInstanceOf(EnvSchemaCLIErrorVO);
+        }
+
     });
 
 });

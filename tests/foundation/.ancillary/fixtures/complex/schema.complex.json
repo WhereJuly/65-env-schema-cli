@@ -1,0 +1,35 @@
+{
+    "type": "object",
+    "required": ["NODE_ENV", "API_KEY", "DB_NAME", "OTHER_API_BASE_URL", "OTHER_API_KEY", "ORM_DEBUG", "DOMAIN_MAXIMUM_ACTIVE_TASKS", "DOMAIN_THRESHOLD_PERCENT"],
+    "additionalProperties": false,
+    "properties": {
+        "NODE_ENV": {
+            "type": "string",
+            "enum": ["example", "development", "stage", "production"]
+        },
+        "API_KEY": {
+            "type": "string"
+        },
+        "DB_NAME": {
+            "type": "string"
+        },
+        "OTHER_API_BASE_URL": {
+            "type": "string"
+        },
+        "OTHER_API_KEY": {
+            "type": "string"
+        },
+        "ORM_DEBUG": {
+            "type": "boolean"
+        },
+        "DOMAIN_MAXIMUM_ACTIVE_TASKS": {
+            "type": "integer",
+            "enum": [5, 10, 20, 50]
+        },
+        "DOMAIN_THRESHOLD_PERCENT": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 50
+        }
+    }
+}
